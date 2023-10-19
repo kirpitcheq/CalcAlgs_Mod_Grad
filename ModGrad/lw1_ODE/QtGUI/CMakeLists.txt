@@ -42,7 +42,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(lw1_GUIQt PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts ChartKPEq MsgBoxQKPEq ODE_KPEq)
+target_link_libraries(lw1_GUIQt PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts KPEqLibs)
 
 set_target_properties(lw1_GUIQt PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

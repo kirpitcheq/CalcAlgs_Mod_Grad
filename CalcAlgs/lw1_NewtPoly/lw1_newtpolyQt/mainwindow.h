@@ -9,11 +9,13 @@
 #include <QScatterSeries>
 #include <QLineSeries>
 #include <QStandardItemModel>
-#include "../lw1_lib/modules/newtpoly.hpp"
-#include "../lw1_lib/modules/newtpolyroots.hpp"
-#include "../lw1_lib/modules/sysequasroot.hpp"
-#include "../lw1_libQt/MsgBoxSmpl/msgboxsmpl.h"
-#include "../lw1_libQt/Chart/chart.h"
+
+#include <KPEq/newtpoly.hpp>
+#include <KPEq/newtpolyroots.hpp>
+#include <KPEq/sysequasroot.hpp>
+#include <KPEq/chart.h>
+#include <KPEq/msgboxsmpl.h>
+
 #include <memory>
 #include <vector>
 
@@ -40,15 +42,15 @@ private slots:
 
 private:
     QChart *qchart;
-    Chart *chart;
+    KPEq::Chart *chart;
     QChartView *qchartview;
     QLineSeries *qlineseries;
     Ui::MainWindow *ui;
 
-    using PairTables = std::pair<InterpKPEq::SrcNodesType,InterpKPEq::SrcNodesType>;
+    using PairTables = std::pair<KPEq::Interpoll::SrcNodesType,KPEq::Interpoll::SrcNodesType>;
     using PairTablesVect = std::vector<PairTables>;
-    InterpKPEq::SrcNodesType vect = {{3,4},{4,6}};
-    InterpKPEq::XYNodes node = {2,2};
+    KPEq::Interpoll::SrcNodesType vect = {{3,4},{4,6}};
+    KPEq::Interpoll::XYNodes node = {2,2};
     PairTablesVect exmplvect = {
         {
             {{-0.5,0.707}, {-0.25, 0.924}, {0.0, 1.0}, {0.25,0.924}, {0.5,0.707},{0.75,0.383},{1.0,0}},
@@ -122,12 +124,12 @@ private:
     public:
         QPointer<QLineSeries> series = new QLineSeries;
 //        QLineSeries series;
-        InterpKPEq::SrcNodesType vectnodes;
+        KPEq::Interpoll::SrcNodesType vectnodes;
     };
 
 //    const VectNSers& getDataFrom(const QTableWidget & nodesTable, VectNSers&& result = VectNSers()) {
     VectNSers getDataFrom(const QTableWidget & nodesTable){
-        using namespace InterpKPEq;
+        using namespace KPEq::Interpoll;
 
         VectNSers result;
         auto tablerows = nodesTable.rowCount();

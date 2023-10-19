@@ -4,7 +4,7 @@
 #include <KPEq/revpolnot_kp.hpp>
 #include <optional>
 
-namespace ODE_KPeQ
+namespace KPEq
 {
     /*must be two methods: (no need classes for this because too simple, but use class may be if polnot input)*/
     /*
@@ -49,10 +49,9 @@ namespace ODE_KPeQ
      */
     double third_func(double x, double u);
 
-    using namespace std;
     using T = double;
-    using XYNode = pair<T,T>;
-    using TwinVectT = vector<XYNode>;
+    using XYNode = std::pair<T,T>;
+    using TwinVectT = std::vector<XYNode>;
     using FuncODE = double (*)(double x, double y);
     TwinVectT EilCalc(double x0, double y0, double step, FuncODE func);
     // TwinVectT EilCalc(double x0, double y0, double step, double xmax, string expression);

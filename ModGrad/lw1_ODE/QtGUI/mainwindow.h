@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <KPEq/chart.h>
-#include <ODE_KPEq.h>
+#include <KPEq/ODE.hpp>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,5 +32,5 @@ private:
 #endif // MAINWINDOW_H
 
 namespace KPEq{
-    bool findIntervalValues(RPN_KP &expression, double interval_start, double interval_end, double step, list<pair<double, double> > &out_vals, bool stepByX = true, ODE_KPeQ::TwinVectT refCoords = ODE_KPeQ::TwinVectT());
+    bool findIntervalValues(RPN_KP &expression, double interval_start, double interval_end, double step, std::list<std::pair<double, double> > &out_vals, bool stepByX = true, KPEq::TwinVectT refCoords = KPEq::TwinVectT());
 }

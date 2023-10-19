@@ -1,6 +1,6 @@
-#include <ODE_KPEq.h>
+#include <KPEq/ODE.hpp>
 #include <exception>
-namespace ODE_KPeQ {
+namespace KPEq{
     TwinVectT EilCalc(double x0, double y0, double step, FuncODE func){ //end condition by func arg?
         TwinVectT result;
 

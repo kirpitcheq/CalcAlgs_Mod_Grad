@@ -43,8 +43,7 @@ else()
 endif()
 
 target_link_libraries(lw1_sysequaroot PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-    Chart
-    MsgBoxSmpl
+    KPEqLibs
 )
 
 set_target_properties(lw1_sysequaroot PROPERTIES

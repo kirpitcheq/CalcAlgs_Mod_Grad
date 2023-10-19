@@ -6,7 +6,7 @@ SysEqRootForm::SysEqRootForm(QWidget *parent)
     , ui(new Ui::SysEqRootForm)
 {
     ui->setupUi(this);
-    chart = new Chart();
+    chart = new KPEq::Chart();
     qchartview = new QChartView(chart, this);
     qchartview->setRenderHints(QPainter::Antialiasing);
     ui->chartForm->addWidget(qchartview);
@@ -20,7 +20,7 @@ SysEqRootForm::~SysEqRootForm()
 
 void SysEqRootForm::on_btnCalcAux_clicked()
 {
-    syseroot = std::make_unique()
+    // syseroot = std::make_unique();
         
 }
 

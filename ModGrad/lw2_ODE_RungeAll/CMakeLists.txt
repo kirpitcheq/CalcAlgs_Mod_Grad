@@ -10,11 +10,16 @@ message("C++ Standard: ${CMAKE_CXX_STANDARD}")
 include(CTest)
 enable_testing()
 
-add_subdirectory(KPEq)
-add_subdirectory(lw2_mod_QtGUI)
+# IntegralLib, Runge lib
+add_subdirectory(mod_lw2_lib)
+
+if(CA_MOD_ENABLE_BUILD_LW_EXES)
+    add_subdirectory(mod_lw2_QtGUI)
+endif()
+    # add_subdirectory(mod_lw2_QtGUI)
 
 add_executable(mainprobe main.cpp)
-target_link_libraries(mainprobe PUBLIC KPEq)
+target_link_libraries(mainprobe PUBLIC KPEqLibs)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

@@ -20,7 +20,7 @@ MainWindow::~MainWindow() {
 }
 
 
-bool KPEq::findIntervalValues(RPN_KP &expression, double interval_start, double interval_end, double step, list<pair<double, double> > &out_vals, bool stepByX, ODE_KPeQ::TwinVectT refCoords)
+bool KPEq::findIntervalValues(RPN_KP &expression, double interval_start, double interval_end, double step, std::list<std::pair<double, double> > &out_vals, bool stepByX, KPEq::TwinVectT refCoords)
 {
     double temp;
     if (!step)
@@ -37,7 +37,7 @@ bool KPEq::findIntervalValues(RPN_KP &expression, double interval_start, double 
                     return false;
             }
             expression.calculate(temp);
-            auto pairval = stepByX == true ? pair<double,double>(x, temp) : pair<double,double>(temp, y);
+            auto pairval = stepByX == true ? std::pair<double,double>(x, temp) : std::pair<double,double>(temp, y);
             out_vals.push_back(pairval);
         }
     }
@@ -53,7 +53,7 @@ bool KPEq::findIntervalValues(RPN_KP &expression, double interval_start, double 
                     return false;
             }
             expression.calculate(temp);
-            auto pairval = stepByX ? pair<double,double>(i, temp) : pair<double,double>(temp, i);
+            auto pairval = stepByX ? std::pair<double,double>(i, temp) : std::pair<double,double>(temp, i);
             out_vals.push_back(pairval);
         }
         // i += step;
@@ -68,7 +68,7 @@ bool KPEq::findIntervalValues(RPN_KP &expression, double interval_start, double 
                     return false;
             }
             expression.calculate(temp);
-            auto pairval = stepByX ? pair<double,double>(i, temp) : pair<double,double>(temp, i);
+            auto pairval = stepByX ? std::pair<double,double>(i, temp) : std::pair<double,double>(temp, i);
             out_vals.push_back(pairval);
         }
     }
@@ -89,18 +89,18 @@ void MainWindow::on_calcBtn_clicked()
     auto y0 = ui->y0Spin->value();
     auto xmax = ui->xmaxSpin->value();
     auto step = ui->stepSpin->value();
-    ODE_KPeQ::TwinVectT pointsVect;
+    KPEq::TwinVectT pointsVect;
     std::vector<double> stepVect;
     try{
         if(ui->autoStepCheck->isChecked()){
-                pointsVect = ODE_KPeQ::EilCalc(x0,y0,step, xmax, derivexpr.toStdString(), ui->stepSpin->value(), &stepVect);
+                pointsVect = KPEq::EilCalc(x0,y0,step, xmax, derivexpr.toStdString(), ui->stepSpin->value(), &stepVect);
         }
         else{
-            pointsVect = ODE_KPeQ::EilCalc(x0,y0,step, xmax, derivexpr.toStdString());
+            pointsVect = KPEq::EilCalc(x0,y0,step, xmax, derivexpr.toStdString());
         }
     }
     catch(const std::exception & ex){
-        MsgBoxSmpl(QString::fromStdString("Derivative expression: " + string(ex.what())));
+        MsgBoxSmpl(QString::fromStdString("Derivative expression: " + std::string(ex.what())));
         return;
     }
     chart->updateSeries(pointsVect);
@@ -108,7 +108,7 @@ void MainWindow::on_calcBtn_clicked()
     //if 'x' - exit
     /* analyt expression */
     auto analytexpr= ui->analytTEdit->toPlainText();
-    ODE_KPeQ::TwinVectT analytpoints;
+    KPEq::TwinVectT analytpoints;
     if(!analytexpr.isEmpty()){
         auto values_list = std::list<std::pair<double,double>>();
         auto analytstdstr = analytexpr.toStdString();
@@ -118,12 +118,12 @@ void MainWindow::on_calcBtn_clicked()
         auto hasResult = KPEq::findIntervalValues(rpnexpr, x0, xmax, step, values_list, stepByX, pointsVect);
         //SIMPLE EXPRESSION AND NEED SELECT X OR Y THIS
         //need check with only by one value (maybe check with rpnexpr)
-        ODE_KPeQ::TwinVectT analytPointsVect(std::make_move_iterator(std::begin(values_list)), std::make_move_iterator(std::end(values_list)));
+        KPEq::TwinVectT analytPointsVect(std::make_move_iterator(std::begin(values_list)), std::make_move_iterator(std::end(values_list)));
         chart->addVectSeries(analytPointsVect);
         analytpoints = analytPointsVect;
     }
 
-    std::vector<ODE_KPeQ::TwinVectT> approxsVectsVector;
+    std::vector<KPEq::TwinVectT> approxsVectsVector;
     auto approxexount = ui->analytAprxTableIn->rowCount();
     for(auto row = 0; row < approxexount; row++){
         auto values_list = std::list<std::pair<double,double>>();
@@ -133,7 +133,7 @@ void MainWindow::on_calcBtn_clicked()
             continue;
         RPN_KP rpnexpr(approxexpr.toStdString());
         KPEq::findIntervalValues(rpnexpr, x0, xmax, step, values_list); //maybe with x or with y =
-        ODE_KPeQ::TwinVectT vectorFromList(std::make_move_iterator(std::begin(values_list)), std::make_move_iterator(std::end(values_list)));
+        KPEq::TwinVectT vectorFromList(std::make_move_iterator(std::begin(values_list)), std::make_move_iterator(std::end(values_list)));
         approxsVectsVector.push_back(vectorFromList);
     }
 

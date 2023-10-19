@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    chart = new Chart;
+    chart = new KPEq::Chart;
 
     qchartview = new QChartView(chart, this);
     qchartview->setRenderHints(QPainter::Antialiasing);
@@ -37,7 +37,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_calcBtn_clicked()
 {
     using namespace std;
-    using namespace InterpKPEq;
+    using namespace KPEq::Interpoll;
     //here need set additional function for reverse data and turn it into NewtPoly class with name NewtPoly::findRoots(args)(static meth)
 
     //from table to qchart, than calculated point must be push as bold point to qchart
@@ -116,7 +116,7 @@ void MainWindow::on_nodesCountSpinB_valueChanged(int arg1) {
 void MainWindow::on_calcsysequarootBtn_clicked()
 {
     using namespace std;
-    using namespace InterpKPEq;
+    using namespace KPEq::Interpoll;
     //here need set additional function for reverse data and turn it into NewtPoly class with name NewtPoly::findRoots(args)(static meth)
 
     auto table1data = getDataFrom(*ui->nodesTable);

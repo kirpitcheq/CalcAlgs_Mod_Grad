@@ -48,6 +48,7 @@ int main(int, char**){
     };
 #endif
 
+    using namespace KPEq;
     NewtPoly newtpol(srcnodes);
     //how check errors with this? only use after this flags
     if(bool wrong = newtpol.isWrong(); wrong == true)

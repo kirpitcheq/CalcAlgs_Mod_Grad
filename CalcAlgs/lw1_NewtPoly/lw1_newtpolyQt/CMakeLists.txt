@@ -19,8 +19,6 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        ../lw1_lib/modules/newtpoly.hpp
-        ../lw1_lib/modules/newtpolyroots.hpp
 )
 
 
@@ -53,8 +51,9 @@ target_link_libraries(lw1_newtpolyQt PRIVATE
     Qt${QT_VERSION_MAJOR}::Charts
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Gui
-    MsgBoxSmpl
-    Chart
+    # MsgBoxSmpl
+    # Chart
+    KPEqLibs
 )
 
 set_target_properties(lw1_newtpolyQt PROPERTIES

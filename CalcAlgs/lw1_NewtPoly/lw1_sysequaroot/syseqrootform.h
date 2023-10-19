@@ -5,11 +5,11 @@
 #include <QChartView>
 #include <QLineSeries>
 #include <QStandardItemModel>
-#include "../lw1_lib/modules/newtpoly.hpp"
-#include "../lw1_lib/modules/newtpolyroots.hpp"
-#include "../lw1_lib/modules/sysequasroot.hpp"
-#include "../lw1_libQt/MsgBoxSmpl/msgboxsmpl.h"
-#include "../lw1_libQt/Chart/chart.h"
+#include <KPEq/newtpoly.hpp>
+#include <KPEq/newtpolyroots.hpp>
+#include <KPEq/sysequasroot.hpp>
+#include <KPEq/chart.h>
+#include <KPEq/msgboxsmpl.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SysEqRootForm; }
@@ -28,9 +28,9 @@ private slots:
 
 private:
     Ui::SysEqRootForm *ui;
-    Chart *chart;
+    KPEq::Chart *chart;
     QChartView *qchartview;
 
-    std::unique_ptr<InterpKPEq::SysEquasRoot> syseroot;
+    std::unique_ptr<KPEq::Interpoll::SysEquasRoot> syseroot;
 };
 #endif // SYSEQROOTFORM_H

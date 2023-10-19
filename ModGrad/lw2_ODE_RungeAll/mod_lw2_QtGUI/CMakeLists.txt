@@ -42,7 +42,9 @@ else()
     endif()
 endif()
 
-target_link_libraries(lw2_QtGUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(lw2_QtGUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets 
+    KPEqLibs
+)
 
 set_target_properties(lw2_QtGUI PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

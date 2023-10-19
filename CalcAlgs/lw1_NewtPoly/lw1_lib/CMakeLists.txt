@@ -5,8 +5,6 @@ set (CMAKE_CXX_STANDARD 20)
 include(CTest)
 enable_testing()
 
-# add_subdirectory(modules)
-
 # include(FetchContent)
 # FetchContent_Declare(
 #     kpeqlib
@@ -16,7 +14,19 @@ enable_testing()
 # )
 # FetchContent_MakeAvailable(kpeqlib)
 
-add_executable(${PROJECT_NAME} main.cpp)
+project(KPEq_NewtonPolynom VERSION 0.1.0 LANGUAGES C CXX)
+add_library(${PROJECT_NAME} 
+    newtpoly.cpp inc/KPEq/newtpoly.hpp 
+    newtpolyroots.cpp inc/KPEq/newtpolyroots.hpp
+    sysequasroot.cpp inc/KPEq/sysequasroot.hpp
+    )
+target_include_directories(${PROJECT_NAME} PUBLIC inc)
+
+# project(KPEq_NewtPolyRoots VERSION 0.1.0 LANGUAGES C CXX)
+# add_library(${PROJECT_NAME} newtpolyroots.cpp inc/KPEq/newtpolyroots.hpp)
+# target_include_directories(${PROJECT_NAME} inc)
+# target_link_libraries(${PROJECT_NAME} PUBLIC KPEq_NewtonPolynom)
+# add_executable(${PROJECT_NAME} main.cpp)
 # target_link_libraries(${PROJECT_NAME} PUBLIC NewtonPolynom)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
