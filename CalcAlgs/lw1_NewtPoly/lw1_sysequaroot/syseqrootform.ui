@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SysEqRootForm</class>
+ <widget class="QMainWindow" name="SysEqRootForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>511</width>
+    <height>754</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SysEqRootForm</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QFormLayout" name="chartForm"/>
+    </item>
+    <item>
+     <layout class="QGridLayout" name="gridLayout" rowminimumheight="1,10,1,10,1">
+      <item row="0" column="0">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QHBoxLayout" name="nodesCount_2">
+            <item>
+             <widget class="QLabel" name="NodesLabel_2">
+              <property name="text">
+               <string>Nodes (min 2)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinbNodesCount_1">
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="singleStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>7</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="nodesTable_1">
+            <property name="autoScrollMargin">
+             <number>16</number>
+            </property>
+            <property name="rowCount">
+             <number>7</number>
+            </property>
+            <property name="columnCount">
+             <number>2</number>
+            </property>
+            <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+             <bool>false</bool>
+            </attribute>
+            <row/>
+            <row/>
+            <row/>
+            <row/>
+            <row/>
+            <row/>
+            <row/>
+            <column/>
+            <column/>
+            <item row="0" column="0">
+             <property name="text">
+              <string>-0.5</string>
+             </property>
+            </item>
+            <item row="0" column="1">
+             <property name="text">
+              <string>0.707</string>
+             </property>
+            </item>
+            <item row="1" column="0">
+             <property name="text">
+              <string>-0.25</string>
+             </property>
+            </item>
+            <item row="1" column="1">
+             <property name="text">
+              <string>0.924</string>
+             </property>
+            </item>
+            <item row="2" column="0">
+             <property name="text">
+              <string>0.0</string>
+             </property>
+            </item>
+            <item row="2" column="1">
+             <property name="text">
+              <string>1.0</string>
+             </property>
+            </item>
+            <item row="3" column="0">
+             <property name="text">
+              <string>0.25</string>
+             </property>
+            </item>
+            <item row="3" column="1">
+             <property name="text">
+              <string>0.924</string>
+             </property>
+            </item>
+            <item row="4" column="0">
+             <property name="text">
+              <string>0.5</string>
+             </property>
+            </item>
+            <item row="4" column="1">
+             <property name="text">
+              <string>0.707</string>
+             </property>
+            </item>
+            <item row="5" column="0">
+             <property name="text">
+              <string>0.75</string>
+             </property>
+            </item>
+            <item row="5" column="1">
+             <property name="text">
+              <string>0.383</string>
+             </property>
+            </item>
+            <item row="6" column="0">
+             <property name="text">
+              <string>1.0</string>
+             </property>
+            </item>
+            <item row="6" column="1">
+             <property name="text">
+              <string>0</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="1">
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <item>
+           <layout class="QHBoxLayout" name="nodesCount_5">
+            <item>
+             <widget class="QLabel" name="NodesLabel_5">
+              <property name="text">
+               <string>Nodes (min 2)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinbNodesCount_2">
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="singleStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>7</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="nodesTable_2">
+            <property name="autoScrollMargin">
+             <number>16</number>
+            </property>
+            <property name="rowCount">
+             <number>7</number>
+            </property>
+            <property name="columnCount">
+             <number>2</number>
+            </property>
+            <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+             <bool>false</bool>
+            </attribute>
+            <row/>
+            <row/>
+            <row/>
+            <row/>
+            <row/>
+            <row/>
+            <row/>
+            <column/>
+            <column/>
+            <item row="0" column="0">
+             <property name="text">
+              <string>-0.5</string>
+             </property>
+            </item>
+            <item row="0" column="1">
+             <property name="text">
+              <string>0.707</string>
+             </property>
+            </item>
+            <item row="1" column="0">
+             <property name="text">
+              <string>-0.25</string>
+             </property>
+            </item>
+            <item row="1" column="1">
+             <property name="text">
+              <string>0.924</string>
+             </property>
+            </item>
+            <item row="2" column="0">
+             <property name="text">
+              <string>0.0</string>
+             </property>
+            </item>
+            <item row="2" column="1">
+             <property name="text">
+              <string>1.0</string>
+             </property>
+            </item>
+            <item row="3" column="0">
+             <property name="text">
+              <string>0.25</string>
+             </property>
+            </item>
+            <item row="3" column="1">
+             <property name="text">
+              <string>0.924</string>
+             </property>
+            </item>
+            <item row="4" column="0">
+             <property name="text">
+              <string>0.5</string>
+             </property>
+            </item>
+            <item row="4" column="1">
+             <property name="text">
+              <string>0.707</string>
+             </property>
+            </item>
+            <item row="5" column="0">
+             <property name="text">
+              <string>0.75</string>
+             </property>
+            </item>
+            <item row="5" column="1">
+             <property name="text">
+              <string>0.383</string>
+             </property>
+            </item>
+            <item row="6" column="0">
+             <property name="text">
+              <string>1.0</string>
+             </property>
+            </item>
+            <item row="6" column="1">
+             <property name="text">
+              <string>0</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="polyPowLabel_2">
+          <property name="text">
+           <string>poly power</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spinbAuxPolyPow">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="value">
+           <number>4</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnCalcAux">
+          <property name="text">
+           <string>Calc aux</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="btnCalcResT">
+        <property name="text">
+         <string>Calc Res Table</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QTableView" name="auxTable"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QTableView" name="resTable"/>
+      </item>
+      <item row="3" column="0" rowspan="2">
+       <widget class="QTextBrowser" name="textResult"/>
+      </item>
+      <item row="4" column="1">
+       <layout class="QHBoxLayout" name="rootConfig">
+        <item>
+         <widget class="QLabel" name="polyPowLabel_4">
+          <property name="text">
+           <string>poly power</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spinbRootPolyPow">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="value">
+           <number>4</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnRootCalc">
+          <property name="text">
+           <string>Calc root</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>511</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
