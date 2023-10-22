@@ -7,7 +7,7 @@ KPEq::Integral::Integral(IntegrandFunc &integrand_func, double from, double to) 
     }
 }
 
-double KPEq::Integral::calcBySympson(double step)
+double KPEq::Integral::calcBySympson(double step) // step or numb of intervals maybe?
 {
     if(step <= 0) {
         throw std::invalid_argument((std::string)fmt::format("Wrong argument: step {} must be more than 0", step)); //or must be more than 2?

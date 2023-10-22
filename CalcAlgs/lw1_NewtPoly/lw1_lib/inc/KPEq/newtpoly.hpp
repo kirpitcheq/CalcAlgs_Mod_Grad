@@ -27,7 +27,6 @@ private:
     std::size_t workTblCols = 0;
 
     SrcNodesType srcnodes;
-    // T ** ppnodes = nullptr;
     std::size_t polypow;
     int err_code = 0; //-1 by def
     T targetval;

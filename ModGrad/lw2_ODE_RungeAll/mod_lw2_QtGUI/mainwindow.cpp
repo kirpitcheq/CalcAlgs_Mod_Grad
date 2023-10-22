@@ -30,7 +30,7 @@ void MainWindow::on_calculateBtn_clicked()
     static double T_w = 0;
 
     static KPEq::Interpoll::SrcNodesType tabledata_T0I;
-    static KPEq::Interpoll::NewtPoly newt_T0byI(tabledata_T0I);
+    static KPEq::Interpoll::NewtPoly newt_T0byI(tabledata_T0I); // interface need but full rework class?
     if(newt_T0byI.isWrong())
         throw std::invalid_argument("wrong table data");
     static KPEq::Interpoll::SrcNodesType tabledata_mI;
@@ -50,14 +50,14 @@ void MainWindow::on_calculateBtn_clicked()
     } ;
 
     static KPEq::Interpoll::SrcNodesType tabledata_SigmT;
-    static KPEq::Interpoll::NewtPoly newt_SibmByT(tabledata_SigmT);
-    if(newt_SibmByT.isWrong())
+    static KPEq::Interpoll::NewtPoly newt_SigmByT(tabledata_SigmT);
+    if(newt_SigmByT.isWrong())
         throw std::invalid_argument("wrong table data");
     static auto sigm = [](double I)->double{
-        auto configErr = newt_SibmByT.setConfig(T(I,z), polypow);
+        auto configErr = newt_SigmByT.setConfig(T(I,z), polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtByT wrong cnfg");
-        return newt_SibmByT.calc().value();
+        return newt_SigmByT.calc().value();
     };
     static auto R_p = [](double I) -> double {
         KPEq::IntegrandFunc integrfunc = [](double I)->double{ return sigm(T(I,z))*z; };
