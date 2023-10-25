@@ -12,9 +12,10 @@ double KPEq::Integral::calcBySympson(double step) // step or numb of intervals m
     if(step <= 0) {
         throw std::invalid_argument((std::string)fmt::format("Wrong argument: step {} must be more than 0", step)); //or must be more than 2?
     }
-
+    //fix it for b
     double result = (integrand_func(from) + integrand_func(to)) ;
     bool isEven = true;
+    // = 1 / 3 (f_2n+0 + 2 + 4 * f_2n+1 + f_2n+2 ) ???
     for(double x = from + step; x < to; x+=step){
         if(isEven)
             result += (integrand_func(x) * 4);
