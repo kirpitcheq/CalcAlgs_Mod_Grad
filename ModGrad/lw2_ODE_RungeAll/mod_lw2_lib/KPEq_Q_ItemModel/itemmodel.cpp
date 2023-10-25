@@ -46,9 +46,9 @@ Qt::ItemFlags ItemModel::flags(const QModelIndex &index) const {
 }
 
 bool ItemModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-    if(index.isValid() && role == Qt::EditRole){
+    if(role == Qt::EditRole && index.isValid()){
         items[index.row()][index.column()] = (Tval)value.toDouble();
-        emit dataChanged(index,index);
+        emit dataChanged(index, index);
         return true;
     }
     return false;

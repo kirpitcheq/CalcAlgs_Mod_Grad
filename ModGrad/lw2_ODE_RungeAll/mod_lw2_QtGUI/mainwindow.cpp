@@ -59,11 +59,11 @@ void MainWindow::on_calculateBtn_clicked()
             throw std::invalid_argument("newtByT wrong cnfg");
         return newt_SigmByT.calc().value();
     };
-    static auto R_p = [](double I) -> double {
+    static auto R_p = [](double I) -> double { 
         KPEq::IntegrandFunc integrfunc = [](double I)->double{ return sigm(T(I,z))*z; };
         KPEq::Integral integr(integrfunc, 0, 1);
-        return ( l_p / 2 * M_PI * R * R * (integr.calcBySympson(I)) ) ;
-    };
+        return ( l_p / 2 * M_PI * R * R * (integr.calcBySympson(z,I)) ) ; //integr by z but need 2 args
+    }; //I - interp, z - integr
     auto di_dt = [](double t, double I, double U) -> double {
         return ( ((U - (R_k + R_p(I))) * I) / L  );
     };
