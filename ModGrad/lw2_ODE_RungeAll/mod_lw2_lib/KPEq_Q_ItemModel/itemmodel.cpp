@@ -16,10 +16,12 @@ void someFunc(){
 int ItemModel::rowCount(const QModelIndex &parent) const { return items.size(); }
 
 int ItemModel::columnCount(const QModelIndex &parent) const {
-    return items.empty() ? 0 : std::max_element(items.begin(),items.end(),
-                                                [](auto first,auto second)->bool{
-                                                    return first.size() > second.size();
-                                                })->size();
+    int maxsize = 0;
+    for(auto item : items){
+        auto item_size = item.size();
+        if(item_size > maxsize) maxsize = item_size;
+    }
+    return maxsize;
 }
 
 QVariant ItemModel::data(const QModelIndex &index, int role) const {
@@ -40,12 +42,13 @@ QVariant ItemModel::headerData(int section, Qt::Orientation orientation, int rol
 
 Qt::ItemFlags ItemModel::flags(const QModelIndex &index) const {
     if(!index.isValid()) return Qt::ItemIsEnabled;
-    return QAbstractItemModel::flags(index) | Qt::ItemIsEnabled;
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
 bool ItemModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if(role == Qt::EditRole && index.isValid()){
         items[index.row()][index.column()] = (Tval)value.toDouble();
+        emit dataChanged(index, index);
         return true;
     }
     return false;
