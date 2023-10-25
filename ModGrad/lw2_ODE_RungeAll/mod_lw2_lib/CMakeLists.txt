@@ -38,3 +38,7 @@ add_library(${PROJECT_NAME} inc/KPEq/rungeode.hpp)
 target_include_directories(KPEq_RungeODE PUBLIC inc)
 set_target_properties(KPEq_RungeODE PROPERTIES LINKER_LANGUAGE CXX)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+
+# --------------------------------------------------------------------------------
+
+add_subdirectory(KPEq_Q_ItemModel)

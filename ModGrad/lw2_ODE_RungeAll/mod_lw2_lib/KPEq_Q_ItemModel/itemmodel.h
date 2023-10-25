@@ -11,11 +11,11 @@ namespace Q {
 using Tval = double;
 using Tcontrow = std::vector<Tval>;
 using Tcont = std::vector<Tcontrow>;
-class ItemModel : public QAbstractItemModel
+class ItemModel : public QAbstractTableModel//QAbstractItemModel
 {
     Q_OBJECT
 public:
-    ItemModel(const Tcont& items, QObject *parent = nullptr) : QAbstractItemModel{parent}, items(items){}
+    ItemModel(const Tcont& items, QObject *parent = nullptr) : items(items), QAbstractTableModel{parent}{}//QAbstractItemModel{parent}{}
 //    explicit ItemModel(QObject *parent = nullptr) : QAbstractItemModel{parent}{}
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
