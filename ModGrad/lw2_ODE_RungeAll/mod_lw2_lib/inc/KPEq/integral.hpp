@@ -5,7 +5,7 @@
 
 namespace KPEq{
 
-    using IntegrandFunc = std::function<double (double)>;
+    using IntegrandFunc = std::function<double (double x)>;
     class Integral
     {
     private:

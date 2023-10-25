@@ -40,7 +40,7 @@
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>80</x>
       <y>90</y>
       <width>256</width>
       <height>192</height>
@@ -54,7 +54,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
