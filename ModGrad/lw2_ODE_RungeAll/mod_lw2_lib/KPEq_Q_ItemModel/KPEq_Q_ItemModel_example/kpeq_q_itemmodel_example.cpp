@@ -1,6 +1,5 @@
 #include "kpeq_q_itemmodel_example.h"
 #include "./ui_kpeq_q_itemmodel_example.h"
-#include <KPEq_Q_Libs/itemmodel.h>
 
 KPEq_Q_ItemModel_Example::KPEq_Q_ItemModel_Example(QWidget *parent)
     : QMainWindow(parent)
@@ -15,7 +14,7 @@ KPEq_Q_ItemModel_Example::KPEq_Q_ItemModel_Example(QWidget *parent)
         {5,3,4,1},
     };
 
-    auto model = new KPEq::Q::ItemModel(items);
+    model = new KPEq::Q::ItemModel(items);
 
     ui->tableView->setModel(model);
 }
