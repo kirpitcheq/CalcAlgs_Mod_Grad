@@ -16,6 +16,7 @@ Chart::Chart() {
 
 void Chart::updateSeries(QAbstractSeries * series){
     this->removeAllSeries();
+    this->createDefaultAxes();
     this->addSeries(series);
     this->createDefaultAxes();
 }

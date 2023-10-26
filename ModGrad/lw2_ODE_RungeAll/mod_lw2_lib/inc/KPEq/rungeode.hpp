@@ -49,7 +49,7 @@ namespace KPEq
             { /*check args*/ }
             //             std::pair<TVal,TVal> calcNextByRunge1(TVal xlast, TVal ylast){ return (ylast + step * func(xlast,ylast)); }
             std::pair<TVal,TVal> calcNextByRunge2(TVal & xlast, const TVal ylast, const TVal zlast){
-                TVal alpha = 1/2;
+                TVal alpha = 1.0/2.0;
                 TVal k1 = func1(xlast,ylast,zlast); // ? no step mul?
                 TVal j1 = func2(xlast,ylast,zlast); // ? no step mul?
                 TVal k2 = step * func1(xlast + step/(2*alpha), ylast + step/(2*alpha) * k1, zlast + step/(2*alpha) * j1);

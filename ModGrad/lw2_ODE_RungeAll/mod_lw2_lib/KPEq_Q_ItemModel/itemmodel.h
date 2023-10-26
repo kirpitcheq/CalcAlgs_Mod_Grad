@@ -34,6 +34,8 @@ public:
 
     ~ItemModel() override = default;
 
+    Tcontrow& operator[](int rowitems){ return items[rowitems]; }
+
 private:
     Tcont items;
 };
