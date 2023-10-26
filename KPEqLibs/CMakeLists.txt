@@ -10,4 +10,5 @@ target_link_libraries(${PROJECT_NAME} INTERFACE
     KPEq_ODE
     KPEq_Integral 
     KPEq_RungeODE
+    KPEq_Q_ItemModel
 )

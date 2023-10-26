@@ -16,22 +16,70 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+
+    static double R = 0.35;
+    static double l_p = 12; //sm -> m
+    static double L_k = 187; //from spin or TexBox
+    static double C_k = 0.000268;
+    static double R_k = 0.25; //from spin or TexBox
+    static double T_w = 2000;
+    double U_co = 1400;
+    double I_0 = 0.3;
+
+    /* need set row names */
+    /* for input values need map data table (string values with row names for use this further */
+    KPEq::Q::Tcont init_data = {
+        {R},
+        {l_p},
+        {L_k},
+        {C_k},
+        {R_k},
+        {U_co},
+        {I_0},
+        {T_w},
+    };
+
+    this->initdata_model = new KPEq::Q::ItemModel(init_data); //here need ref from model for data access
+    ui->tableV_InitVals->setModel(initdata_model);
+
+    KPEq::Q::Tcont I_T0_m_data = {
+        { 0.5, 	6730, 0.50 	},
+        { 1, 	6790, 0.55 	},
+        { 5, 	7150, 1.7	},
+        { 10, 	7270, 3		},
+        { 50,	8010, 11	},
+        { 200, 	9185, 32	},
+        { 400, 10010, 40	},
+        { 800, 11140, 41	},
+        { 1200,12010, 39	}
+    };
+
+    KPEq::Q::Tcont Tk_sigma = {
+        {4000, 0.031},
+        {5000, 0.27 },
+        {6000, 2.05 },
+        {7000, 6.06 },
+        {8000, 12.0 },
+        {9000, 19.9 },
+        {10000, 29.6},
+        {11000, 41.1},
+        {12000, 54.1},
+        {13000, 67.7},
+        {14000, 81.5}
+    };
 }
 
 
 void MainWindow::on_calculateBtn_clicked()
 {
     /* init values */
+    static double L = 10; //from spin or TexBox
     double I = 0.3;
     double U = 1400;
-    static double L = 10; //from spin or TexBox
-    static double R_k = 10; //from spin or TexBox
-    static double R = 0.4;
-    static double l_p = 1; //from spin or TexBox
+
     static int polypow = 2; //from spin polypow interpollation
-    static double T_w = 0;
     static double integr_step = 0.05;
-    static double C_k = 0.000268;
+
     /* ------------- */
 
     /* this need set by common table.. but count of values difference! */
