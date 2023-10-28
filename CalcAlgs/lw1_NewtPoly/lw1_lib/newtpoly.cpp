@@ -55,6 +55,9 @@ KPEq::Interpoll::T KPEq::Interpoll::NewtPoly::calcValueWithPoly(T **worktable, s
         result += temp;
     }
     result += worktable[0][1];
+//    for (size_t i = 0; i < pow; i++) {
+//        delete [] worktable[i];
+//    }
     return result;
 }
 

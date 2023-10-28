@@ -70,9 +70,11 @@ namespace KPEq
                 TVal k4 = step * func1(xlast+step,ylast+k3,zlast+j3);
                 TVal j4 = step * func2(xlast+step,ylast+k3,zlast+j3);
                 xlast += step;
+                auto y_res = ylast + (k1 + 2*k2 + 2*k3 + k4) / 6 ;
+                auto z_res = zlast + (j1 + 2*j2 + 2*j3 + j4) / 6;
                 return {
-                    ylast + (k1 + 2*k2 + 2*k3 + k4) / 6 ,
-                    zlast + (j1 + 2*j2 + 2*j3 + j4) / 6 ,
+                    y_res,
+                    z_res
                 };
             }
         private:

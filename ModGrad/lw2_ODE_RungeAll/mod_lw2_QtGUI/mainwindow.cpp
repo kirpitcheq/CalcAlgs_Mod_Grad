@@ -5,6 +5,11 @@
 #include <KPEq/integral.hpp>
 #include <KPEq/rungeode.hpp>
 #include <exception>
+#include <fmt/core.h>
+
+#define PRINTTB(VAL) fmt::print("{} {}\t",#VAL,VAL)
+#define PRINTLN(VAL) fmt::print("{} {}\n",#VAL,VAL)
+#define PRINTNEWLN() fmt::print("\n")
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,23 +17,26 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // double R = 0.35;
-    // double l_p = 12; //sm -> m
-    // double L_k = 187; //from spin or TexBox
-    // double C_k = 268;
-    // double R_k = 0.25; //from spin or TexBox
-    // double U_co = 1400;
-    // double I_0 = 3;
-    // double T_w = 2000;
-
+#define LIKE_FROM_DOC
+#ifdef LIKE_FROM_DOC
+    double R = 0.35;
+    double l_p = 12; //sm -> m
+    double L_k = 187; //from spin or TexBox
+    double C_k = 268;
+    double R_k = 0.25; //from spin or TexBox
+    double U_co = 1400;
+    double I_0 = 3;
+    double T_w = 2000;
+#else
     double R = 0.0035;
     double l_p = 0.012; //sm -> m
     double L_k = 0.000187; //from spin or TexBox
     double C_k = 0.000268;
     double R_k = 0.25; //from spin or TexBox
     double U_co = 1400;
-    double I_0 = 0.3;
+    double I_0 = 0;
     double T_w = 2000;
+#endif
 
     /* need set row names */
     /* for input values need map data table (string values with row names for use this further */
@@ -125,45 +133,55 @@ void MainWindow::on_calculateBtn_clicked()
     }
 
     /* init interpollation objects */
-    static KPEq::Interpoll::NewtPoly newt_T0byI(tabledata_T0I); // interface need but full rework class?
-    if(newt_T0byI.isWrong())
-        throw std::invalid_argument("wrong table data");
-    static KPEq::Interpoll::NewtPoly newt_mbyI(tabledata_mI);
-    if(newt_mbyI.isWrong())
-        throw std::invalid_argument("wrong table data");
 
     static auto T = [polypow, T_w](double I, double z)->double{
+    KPEq::Interpoll::NewtPoly newt_T0byI(tabledata_T0I); // interface need but full rework class?
+    if(newt_T0byI.isWrong())
+        throw std::invalid_argument("wrong table data");
+    KPEq::Interpoll::NewtPoly newt_mbyI(tabledata_mI);
+    if(newt_mbyI.isWrong())
+        throw std::invalid_argument("wrong table data");
         auto configErr = newt_T0byI.setConfig(I, polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtbyZ wrong cnfg");
         auto T0 = newt_T0byI.calc().value();
+        PRINTTB(T0);
         configErr = newt_mbyI.setConfig(I, polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtbyZ wrong cnfg");
         auto m = newt_mbyI.calc().value();
-        return (T0 - (T_w - T0) * std::pow(z, m));
+        PRINTTB(m);
+        auto T = (T0 - (T_w - T0) * std::pow(z, m));
+        PRINTTB(z);
+        PRINTTB(T);
+        return T;
     } ;
 
-    static KPEq::Interpoll::NewtPoly newt_SigmByT(tabledata_SigmT);
+    static auto sigm = [polypow](double T)->double{
+    KPEq::Interpoll::NewtPoly newt_SigmByT(tabledata_SigmT);
     if(newt_SigmByT.isWrong())
         throw std::invalid_argument("wrong table data");
-    static auto sigm = [polypow](double T)->double{
         auto configErr = newt_SigmByT.setConfig(T, polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtByT wrong cnfg");
-        return newt_SigmByT.calc().value();
+        auto sigma = newt_SigmByT.calc().value();
+        PRINTTB(sigma);
+        return sigma;
     };
 
     static auto R_p = [l_p, R, integr_step](double I) -> double
     {
         KPEq::IntegrandFunc integrfunc = [I](double z) -> double { 
             auto iterIntegr = sigm(T(I,z))*z;
+            PRINTTB(iterIntegr);
             return iterIntegr;
         };
         KPEq::Integral integr(integrfunc, 0, 1);
         auto integr_sigmaByTByT0nZ_mul_z = integr.calcBySympson(integr_step);
-        auto result = ( l_p / (2 * M_PI * R * R * (integr_sigmaByTByT0nZ_mul_z)));
-        return result;
+        PRINTLN(integr_sigmaByTByT0nZ_mul_z);
+        auto R_p = ( l_p / (2 * M_PI * R * R * (integr_sigmaByTByT0nZ_mul_z)));
+        PRINTTB(R_p);
+        return R_p;
     };
 
     auto di_dt = [R_k, L_k](double t, double I, double U) -> double {
@@ -190,9 +208,13 @@ void MainWindow::on_calculateBtn_clicked()
 
     KPEq::ODE::ODESysEqua odeSysEqua(di_dt, du_dt, modStep);
     while(time < modtime){
-        auto I_U_pair = odeSysEqua.calcNextByRunge4(time, I, U); //here need switch to choise Runge, need realize Runge1
+        auto I_U_pair = odeSysEqua.calcNextByRunge2(time, I, U); //here need switch to choise Runge, need realize Runge1
         I = I_U_pair.first;
+        PRINTLN(I);
         U = I_U_pair.second;
+        PRINTLN(U);
+        PRINTNEWLN();
+        if(I!=I || U != U) break; // is NaN
         /* set data to table */
         results.push_back({time,I,U});
         results_series_I->append({time,I});
