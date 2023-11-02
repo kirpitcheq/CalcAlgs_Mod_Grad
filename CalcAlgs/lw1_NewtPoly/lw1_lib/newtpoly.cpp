@@ -72,12 +72,14 @@ KPEq::Interpoll::T KPEq::Interpoll::NewtPoly::calcValueWithPoly(T **worktable, s
 KPEq::Interpoll::NewtPoly::IndexWithOpt KPEq::Interpoll::NewtPoly::findIndexFrom(const std::vector<std::pair<T, T> > &nodes, T value) {
     if(value < nodes[0].first)
         return IndexWithOpt(0, IntExtTypeDef::EXTRAPOLATION); //extrapolation with value less than min of nodes value
+    int counter = 0;
     for(auto it = nodes.begin(); it != nodes.end(); it++){
         if(value < it->first) {
             return IndexWithOpt(std::distance(begin(nodes), it),IntExtTypeDef::INTERPOLATION);
         }
+        counter++;
     }
-    return IndexWithOpt(0, IntExtTypeDef::EXTRAPOLATION); // extrapolation with value more than max of nodes value
+    return IndexWithOpt(counter, IntExtTypeDef::EXTRAPOLATION); // extrapolation with value more than max of nodes value
 }
 
 KPEq::Interpoll::T **KPEq::Interpoll::NewtPoly::createWorkTable(const SrcNodesType &srcnodes, std::size_t pow, size_t idx){
