@@ -70,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableV_I_T0_m->setModel(I_T0_m_data_model);
 
     KPEq::Q::Tcont Tk_sigma = {
+//        {2000, 0.001},
         {4000, 0.031},
         {5000, 0.27 },
         {6000, 2.05 },
@@ -135,21 +136,27 @@ void MainWindow::on_calculateBtn_clicked()
     /* init interpollation objects */
 
     static auto T = [polypow, T_w](double I, double z)->double{
-    KPEq::Interpoll::NewtPoly newt_T0byI(tabledata_T0I); // interface need but full rework class?
+    KPEq::Interpoll::NewtPoly newt_T0byI(tabledata_T0I, KPEq::Interpoll::NewtCnfgEnumC::LOGARIPHMIC); // interface need but full rework class?
     if(newt_T0byI.isWrong())
         throw std::invalid_argument("wrong table data");
-    KPEq::Interpoll::NewtPoly newt_mbyI(tabledata_mI);
+    KPEq::Interpoll::NewtPoly newt_mbyI(tabledata_mI, KPEq::Interpoll::NewtCnfgEnumC::LOGARIPHMIC);
     if(newt_mbyI.isWrong())
         throw std::invalid_argument("wrong table data");
         auto configErr = newt_T0byI.setConfig(I, polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtbyZ wrong cnfg");
-        auto T0 = newt_T0byI.calc().value();
+        auto T0Opt = newt_T0byI.calc();
+        if(!T0Opt.has_value())
+            throw std::runtime_error("T0 hasn't value");
+        auto T0 = T0Opt.value();
         PRINTTB(T0);
         configErr = newt_mbyI.setConfig(I, polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtbyZ wrong cnfg");
-        auto m = newt_mbyI.calc().value();
+        auto mOpt = newt_mbyI.calc();
+        if(!mOpt.has_value())
+            throw std::runtime_error("m hasn't value");
+        auto m = mOpt.value();
         PRINTTB(m);
         auto T = (T0 - (T_w - T0) * std::pow(z, m));
         PRINTTB(z);
@@ -158,13 +165,16 @@ void MainWindow::on_calculateBtn_clicked()
     } ;
 
     static auto sigm = [polypow](double T)->double{
-    KPEq::Interpoll::NewtPoly newt_SigmByT(tabledata_SigmT);
+    KPEq::Interpoll::NewtPoly newt_SigmByT(tabledata_SigmT, KPEq::Interpoll::NewtCnfgEnumC::LOGARIPHMIC);
     if(newt_SigmByT.isWrong())
         throw std::invalid_argument("wrong table data");
         auto configErr = newt_SigmByT.setConfig(T, polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtByT wrong cnfg");
-        auto sigma = newt_SigmByT.calc().value();
+        auto sigmaOpt = newt_SigmByT.calc();
+        if(!sigmaOpt.has_value())
+            throw std::runtime_error("sigma hasn't value");
+        auto sigma = sigmaOpt.value();
         PRINTTB(sigma);
         return sigma;
     };

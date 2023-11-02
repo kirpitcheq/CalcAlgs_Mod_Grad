@@ -17,6 +17,7 @@ add_executable(${PROJECT_NAME} newtpoly_tests.cpp)
 target_link_libraries(
   ${PROJECT_NAME}
   GTest::gtest_main
+  KPEq_NewtonPolynom
 )
 gtest_add_tests(lw1_NewtonPolynomTests .noArgs AUTO)
 
@@ -25,5 +26,6 @@ add_executable(${PROJECT_NAME} newtpolyroots_tests.cpp)
 target_link_libraries(
   ${PROJECT_NAME}
   GTest::gtest_main
+  KPEq_NewtonPolynom
 )
 gtest_add_tests(lw1_NewtonPolynomRootsTests .noArgs AUTO)

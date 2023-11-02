@@ -7,4 +7,5 @@ add_subdirectory(lw1_lib)
 add_subdirectory(lw1_libQt)
 add_subdirectory(lw1_newtpolyQt)
 add_subdirectory(lw1_sysequaroot)
-# add_subdirectory(lw1_tests)
+
+ add_subdirectory(lw1_tests)
