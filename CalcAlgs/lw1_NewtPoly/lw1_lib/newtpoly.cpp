@@ -67,6 +67,7 @@ KPEq::Interpoll::T KPEq::Interpoll::NewtPoly::calcValueWithPoly(T **worktable, s
         sortSrcNodes(this->srcnodes);
     }
     return result;
+
 }
 
 KPEq::Interpoll::NewtPoly::IndexWithOpt KPEq::Interpoll::NewtPoly::findIndexFrom(const std::vector<std::pair<T, T> > &nodes, T value) {
