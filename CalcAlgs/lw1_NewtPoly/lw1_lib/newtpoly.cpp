@@ -54,7 +54,9 @@ std::optional<KPEq::Interpoll::T> KPEq::Interpoll::NewtPoly::calc() { //here mus
     auto idx_wopt = findIndexFrom(srcnodes, this->targetval);
 
     if(idx_wopt.second == IntExtTypeDef::EXTRAPOLATION)
+    {
         std::cout << "Extrapollation!" << std::endl;
+    }
     T ** worktable = createWorkTable(this->srcnodes, this->polypow, idx_wopt.first);
     if(worktable == nullptr)
         return std::nullopt;
@@ -98,6 +100,7 @@ KPEq::Interpoll::NewtPoly::IndexWithOpt KPEq::Interpoll::NewtPoly::findIndexFrom
         }
     }
     auto last_idx = nodes.size() - 1;
+    this->polypow = 1;
     return IndexWithOpt(last_idx, IntExtTypeDef::EXTRAPOLATION); // extrapolation with value more than max of nodes value
 }
 

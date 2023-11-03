@@ -152,7 +152,7 @@ void MainWindow::on_calculateBtn_clicked()
     KPEq::Interpoll::NewtPoly newt_mbyI(tabledata_mI, KPEq::Interpoll::NewtCnfgEnumC::LOGARIPHMIC);
     if(newt_mbyI.isWrong())
         throw std::invalid_argument("wrong table data");
-    static auto interp_T0_m_byI = [polypow, &newt_T0byI, &newt_mbyI](double I) -> std::pair<double,double>{
+    static auto interp_T0_m_byI = [polypow, &newt_T0byI, &newt_mbyI,T_w](double I) -> std::pair<double,double>{
         auto configErr = newt_T0byI.setConfig(std::log(I), polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtbyZ wrong cnfg");
@@ -169,9 +169,8 @@ void MainWindow::on_calculateBtn_clicked()
             throw std::runtime_error("m hasn't value");
         auto m = mOpt.value();
         PRINTTB(m);
-        auto T = (T0 - (T_w - T0) * std::pow(z, m));
-        PRINTTB(z);
-        PRINTTB(T);
+//        auto T = (T0 - (T_w - T0) * std::pow(z, m));
+//        PRINTTB(z);
        
         return {T0,m};
     };
