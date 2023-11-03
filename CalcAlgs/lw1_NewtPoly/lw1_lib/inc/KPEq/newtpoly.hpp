@@ -32,6 +32,7 @@ private:
     int err_code = 0; //-1 by def
     T targetval;
     int targetvalidx = -1;
+    bool hasCache = false;
 
     std::unique_ptr<T*> uptr_worktable;
 
@@ -45,6 +46,7 @@ public:
 
     explicit NewtPoly(const SrcNodesType& nodesin);
     NewtPoly(const SrcNodesType& nodesin, NewtCnfgEnumC logariphmic);
+    NewtPoly(const SrcNodesType& nodesin, bool hasCache = false);
 #ifdef ALL_IN_ONE_CTOR
     NewtPoly(const SrcNodesType& nodesin, std::size_t pow, T value)  //here with throw
         : NewtPoly(nodesin)
@@ -70,6 +72,12 @@ public:
     //table need return with arg for printing, need value return
     void calcWorkTable(T** &worktable, size_t tablesize);
     T** getLastWorkTable() const;
+private:
+    SrcNodesType& sortSrcNodes(SrcNodesType & srcnodes){
+        std::sort(std::begin(srcnodes), std::end(srcnodes), [](auto A, auto B){return A.first <= B.second;});
+//        auto unigue_end = std::unigue(std::begin(srcnodes), std::end(srcnodes), [](auto A, auto B){return A.first == B.first;});
+        return srcnodes;
+    }
 
 };
 //NewtPolynomical only find polynom and than when it calculate, we can find any X value with this polynome, but need use Interpolation

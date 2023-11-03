@@ -6,6 +6,8 @@
 #include <KPEq/rungeode.hpp>
 #include <exception>
 #include <fmt/core.h>
+#include <cmath>
+#include <numbers>
 
 #define PRINTTB(VAL) fmt::print("{} {}\t",#VAL,VAL)
 #define PRINTLN(VAL) fmt::print("{} {}\n",#VAL,VAL)
@@ -99,6 +101,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_calculateBtn_clicked()
 {
+    bool isCachable = true;
     double R   = (*initdata_model)[0][0];//Tk_sigma_model[0][1];
     double l_p = (*initdata_model)[1][0]; //sm -> m
     double L_k = (*initdata_model)[2][0]; //from spin or TexBox
@@ -117,6 +120,7 @@ void MainWindow::on_calculateBtn_clicked()
 
     /* this need set by common table.. but count of values difference! */
     /* is need caching values ? */
+
     static KPEq::Interpoll::SrcNodesType tabledata_T0I;
     static KPEq::Interpoll::SrcNodesType tabledata_mI;
     for(auto i = 0; i < this->I_T0_m_data_model->rowCount(); i++){
@@ -135,14 +139,21 @@ void MainWindow::on_calculateBtn_clicked()
 
     /* init interpollation objects */
 
-    static auto T = [polypow, T_w](double I, double z)->double{
+    static auto T = [polypow, T_w](double T0, double m, double z)->double{
+        auto T = (T0 - (T_w - T0) * std::pow(z, m));
+        PRINTTB(z);
+        PRINTTB(T);
+        return T;
+    } ;
+
     KPEq::Interpoll::NewtPoly newt_T0byI(tabledata_T0I, KPEq::Interpoll::NewtCnfgEnumC::LOGARIPHMIC); // interface need but full rework class?
     if(newt_T0byI.isWrong())
         throw std::invalid_argument("wrong table data");
     KPEq::Interpoll::NewtPoly newt_mbyI(tabledata_mI, KPEq::Interpoll::NewtCnfgEnumC::LOGARIPHMIC);
     if(newt_mbyI.isWrong())
         throw std::invalid_argument("wrong table data");
-        auto configErr = newt_T0byI.setConfig(I, polypow);
+    static auto interp_T0_m_byI = [polypow, &newt_T0byI, &newt_mbyI](double I) -> std::pair<double,double>{
+        auto configErr = newt_T0byI.setConfig(std::log(I), polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtbyZ wrong cnfg");
         auto T0Opt = newt_T0byI.calc();
@@ -161,14 +172,15 @@ void MainWindow::on_calculateBtn_clicked()
         auto T = (T0 - (T_w - T0) * std::pow(z, m));
         PRINTTB(z);
         PRINTTB(T);
-        return T;
-    } ;
+       
+        return {T0,m};
+    };
 
-    static auto sigm = [polypow](double T)->double{
     KPEq::Interpoll::NewtPoly newt_SigmByT(tabledata_SigmT, KPEq::Interpoll::NewtCnfgEnumC::LOGARIPHMIC);
     if(newt_SigmByT.isWrong())
         throw std::invalid_argument("wrong table data");
-        auto configErr = newt_SigmByT.setConfig(T, polypow);
+    static auto sigm = [polypow, & newt_SigmByT](double T)->double{
+        auto configErr = newt_SigmByT.setConfig(std::log(T), polypow);
         if(configErr < 0)
             throw std::invalid_argument("newtByT wrong cnfg");
         auto sigmaOpt = newt_SigmByT.calc();
@@ -181,8 +193,11 @@ void MainWindow::on_calculateBtn_clicked()
 
     static auto R_p = [l_p, R, integr_step](double I) -> double
     {
-        KPEq::IntegrandFunc integrfunc = [I](double z) -> double { 
-            auto iterIntegr = sigm(T(I,z))*z;
+        auto pair_T0_m = interp_T0_m_byI(I);
+        auto T0 = pair_T0_m.first;
+        auto m = pair_T0_m.second;
+        KPEq::IntegrandFunc integrfunc = [T0,m](double z) -> double {
+            auto iterIntegr = sigm(T(T0,m,z))*z;
             PRINTTB(iterIntegr);
             return iterIntegr;
         };
@@ -224,7 +239,8 @@ void MainWindow::on_calculateBtn_clicked()
         U = I_U_pair.second;
         PRINTLN(U);
         PRINTNEWLN();
-        if(I!=I || U != U) break; // is NaN
+        if(I!=I || U != U) 
+            break; // is NaN
         /* set data to table */
         results.push_back({time,I,U});
         results_series_I->append({time,I});

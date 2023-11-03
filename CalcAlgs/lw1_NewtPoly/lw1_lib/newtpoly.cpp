@@ -27,6 +27,7 @@ KPEq::Interpoll::NewtPoly::NewtPoly(const SrcNodesType &nodesin, NewtCnfgEnumC l
 }
 
 int KPEq::Interpoll::NewtPoly::setConfig(T value, std::size_t pow) { //here need special enum class with names of errors
+
     this->targetval = value;
     if(logariphmic){
         this->targetval = log(this->targetval);
@@ -45,6 +46,11 @@ std::optional<KPEq::Interpoll::T> KPEq::Interpoll::NewtPoly::calc() { //here mus
     if(err_code != 0){
         return std::nullopt;
     }
+    for(auto srcnode : srcnodes){
+        if(srcnode.first == targetval)
+            return srcnode.second; // if value exist => just return it
+    }
+
     auto idx_wopt = findIndexFrom(srcnodes, this->targetval);
 
     if(idx_wopt.second == IntExtTypeDef::EXTRAPOLATION)
@@ -60,7 +66,7 @@ std::optional<KPEq::Interpoll::T> KPEq::Interpoll::NewtPoly::calc() { //here mus
     return result;
 }
 
-KPEq::Interpoll::T KPEq::Interpoll::NewtPoly::calcValueWithPoly(T **worktable, size_t pow)
+KPEq::Interpoll::T KPEq::Interpoll::NewtPoly::calcValueWithPoly(T **worktable, size_t pow)//here default param need and save it to srctable
 {
     T result = 0;
     for (size_t i = 0; i < pow; i++) {
@@ -74,10 +80,13 @@ KPEq::Interpoll::T KPEq::Interpoll::NewtPoly::calcValueWithPoly(T **worktable, s
         result += temp;
     }
     result += worktable[0][1];
-//    for (size_t i = 0; i < pow; i++) {
-//        delete [] worktable[i];
-//    }
+
+    if(hasCache) {
+        srcnodes.push_back({targetval, result});
+        sortSrcNodes(this->srcnodes);
+    }
     return result;
+
 }
 
 KPEq::Interpoll::NewtPoly::IndexWithOpt KPEq::Interpoll::NewtPoly::findIndexFrom(const std::vector<std::pair<T, T> > &nodes, T value) {
