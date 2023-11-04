@@ -10,19 +10,27 @@ KPEq::Interpoll::NewtPoly::NewtPoly(const SrcNodesType &nodesin)
     std::sort(begin(srcnodes), end(srcnodes), [](auto A, auto B){return A.first <= B.first;});//need sort by x nodesin
     //validation: need upper values and unique values and write values (on 1 value x only 1 value y)
     auto end_of_unique = std::unique(begin(srcnodes),end(srcnodes), [](auto A, auto B){return A.first == B.first;});
-    if(std::distance(begin(srcnodes), end_of_unique) != srcnodes.size()) {
+    volatile auto dist = std::distance(begin(srcnodes),end_of_unique);
+    volatile auto nodes_amount = srcnodes.size();
+    if(dist != nodes_amount) {
         err_code = -1; //wrong input table
     }
     //if end_of_unique distance diff of srcnodes.size() => not unique x! must be unique!
 
 }
 
-KPEq::Interpoll::NewtPoly::NewtPoly(const SrcNodesType &nodesin, NewtCnfgEnumC logariphmic)
+KPEq::Interpoll::NewtPoly::NewtPoly(const SrcNodesType &nodesin, NewtCnfgEnumC mode)
     : KPEq::Interpoll::NewtPoly::NewtPoly(nodesin)
 {
-    for(auto node : this->srcnodes){
-        node.first 	= log(	node.first 	);
-        node.second	= log(	node.second	);
+    if(mode == NewtCnfgEnumC::LOGARIPHMIC || mode == NewtCnfgEnumC::LOG_PLUS_CACHE){
+        for(auto& node : this->srcnodes){
+            node.first 	= std::log(	node.first 	);
+            node.second	= std::log(	node.second	);
+        }
+        logariphmic = true;
+    }
+    if(mode == NewtCnfgEnumC::CACHEBLE || mode == NewtCnfgEnumC::LOG_PLUS_CACHE){
+        hasCache = true;
     }
 }
 
@@ -30,7 +38,7 @@ int KPEq::Interpoll::NewtPoly::setConfig(T value, std::size_t pow) { //here need
 
     this->targetval = value;
     if(logariphmic){
-        this->targetval = log(this->targetval);
+        this->targetval = std::log(this->targetval);
     }
     this->polypow = pow;
     if(err_code != 0)
@@ -55,7 +63,10 @@ std::optional<KPEq::Interpoll::T> KPEq::Interpoll::NewtPoly::calc() { //here mus
 
     if(idx_wopt.second == IntExtTypeDef::EXTRAPOLATION)
     {
-        std::cout << "Extrapollation!" << std::endl;
+        std::cout << "Extrapollation! "
+                  << "Target Value : "
+                  << (logariphmic ? std::pow(std::numbers::e,targetval) : targetval)
+                  << std::endl;
     }
     T ** worktable = createWorkTable(this->srcnodes, this->polypow, idx_wopt.first);
     if(worktable == nullptr)
@@ -84,8 +95,15 @@ KPEq::Interpoll::T KPEq::Interpoll::NewtPoly::calcValueWithPoly(T **worktable, s
     result += worktable[0][1];
 
     if(hasCache) {
+        for(auto it = srcnodes.begin(); it < srcnodes.end(); it++)
+        {
+            if(this->targetval < it->first)
+            {
+                srcnodes.insert(it,{targetval, result});
+                return result;
+            }
+        }
         srcnodes.push_back({targetval, result});
-        sortSrcNodes(this->srcnodes);
     }
     return result;
 
@@ -93,7 +111,11 @@ KPEq::Interpoll::T KPEq::Interpoll::NewtPoly::calcValueWithPoly(T **worktable, s
 
 KPEq::Interpoll::NewtPoly::IndexWithOpt KPEq::Interpoll::NewtPoly::findIndexFrom(const std::vector<std::pair<T, T> > &nodes, T value) {
     if(value < nodes[0].first)
+    {
+        this->polypow = 1;
         return IndexWithOpt(0, IntExtTypeDef::EXTRAPOLATION); //extrapolation with value less than min of nodes value
+    }
+
     for(auto it = nodes.begin(); it != nodes.end(); it++){
         if(value < it->first) {
             return IndexWithOpt(std::distance(begin(nodes), it),IntExtTypeDef::INTERPOLATION);
