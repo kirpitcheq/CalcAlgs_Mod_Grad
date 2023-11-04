@@ -1,4 +1,4 @@
-#include "itemmodel.h"
+#include <KPEq_Q_Libs/itemmodel.h>
 
 namespace KPEq {
 namespace Q {
@@ -30,15 +30,37 @@ QVariant ItemModel::data(const QModelIndex &index, int role) const {
     return QVariant();
 }
 
+#define HEADERS_REIMPLEMENT
+#ifdef HEADERS_REIMPLEMENT
 QVariant ItemModel::headerData(int section, Qt::Orientation orientation, int role) const {
-    if(role == Qt::DisplayRole && role == Qt::EditRole){
+    if(role == Qt::DisplayRole || role == Qt::EditRole){
         if(orientation == Qt::Horizontal)
-            return QString("Row $1").arg(section);
+            return m_hor_headers.contains(section) ? m_hor_headers[section] : QString::number(section);
         else if (orientation == Qt::Vertical)
-            return QString("Column $1").arg(section);
+            return m_ver_headers.contains(section) ? m_ver_headers[section] : QString::number(section);
     }
     return QVariant();
 }
+
+bool KPEq::Q::ItemModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+{
+    if(role == Qt::EditRole && value.isValid())
+    {
+        if(orientation == Qt::Orientation::Horizontal)
+        {
+            m_hor_headers[section] = value.toString();
+        }
+        else if(orientation == Qt::Orientation::Vertical)
+        {
+            m_ver_headers[section] = value.toString();
+        }
+    }
+    else
+        return false;
+    emit headerDataChanged(orientation, section, section);
+    return true;
+}
+#endif
 
 Qt::ItemFlags ItemModel::flags(const QModelIndex &index) const {
     if(!index.isValid()) return Qt::ItemIsEnabled;
