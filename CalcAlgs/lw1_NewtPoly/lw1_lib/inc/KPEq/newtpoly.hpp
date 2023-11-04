@@ -21,7 +21,7 @@ using T = double;
 using XYNodes = std::pair<T, T>;
 using SrcNodesType = std::vector<XYNodes>;
 
-enum class NewtCnfgEnumC{NORMAL,LOGARIPHMIC,CACHEBLE};
+enum class NewtCnfgEnumC{NORMAL,LOGARIPHMIC,CACHEBLE,LOG_PLUS_CACHE};
 class NewtPoly{
 private:
     std::size_t workTblRows = 0;
@@ -34,6 +34,8 @@ private:
     int targetvalidx = -1;
     bool hasCache = false;
 
+
+
     std::unique_ptr<T*> uptr_worktable;
 
     bool logariphmic = false;
@@ -45,7 +47,7 @@ public:
     auto getPolyPow(){return polypow;}
 
     explicit NewtPoly(const SrcNodesType& nodesin);
-    NewtPoly(const SrcNodesType& nodesin, NewtCnfgEnumC logariphmic);
+    NewtPoly(const SrcNodesType& nodesin, NewtCnfgEnumC mode);
 #ifdef ALL_IN_ONE_CTOR
     NewtPoly(const SrcNodesType& nodesin, std::size_t pow, T value)  //here with throw
         : NewtPoly(nodesin)
