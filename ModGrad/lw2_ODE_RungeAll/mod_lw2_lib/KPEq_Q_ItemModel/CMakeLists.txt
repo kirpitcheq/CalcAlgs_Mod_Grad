@@ -13,22 +13,22 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 add_library(KPEq_Q_ItemModel STATIC
   itemmodel.cpp
-  itemmodel.h
+  inc/KPEq_Q_Libs/itemmodel.h
 )
 
 target_link_libraries(KPEq_Q_ItemModel PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 target_compile_definitions(KPEq_Q_ItemModel PRIVATE KPEQ_Q_ITEMMODEL_LIBRARY)
 
-make_directory(${CMAKE_CURRENT_SOURCE_DIR}/inc/KPEq_Q_Libs)
+#make_directory(${CMAKE_CURRENT_SOURCE_DIR}/inc/KPEq_Q_Libs)
 target_include_directories(KPEq_Q_ItemModel PUBLIC inc)
-add_custom_target(
-    TARGET KPEq_Q_ItemModel POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        itemmodel.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/inc/KPEq_Q_Libs/
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/itemmodel.h
-)
+#add_custom_target(
+#    TARGET KPEq_Q_ItemModel POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#        itemmodel.h
+#        ${CMAKE_CURRENT_SOURCE_DIR}/inc/KPEq_Q_Libs/
+#    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/itemmodel.h
+#)
 #file(COPY itemmodel.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/inc/KPEq_Q_Libs)
 
 # ------------------------------------------------------------------------------
