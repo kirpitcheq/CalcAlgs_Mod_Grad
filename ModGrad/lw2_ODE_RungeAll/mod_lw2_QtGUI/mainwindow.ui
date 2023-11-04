@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>767</width>
+    <width>835</width>
     <height>655</height>
    </rect>
   </property>
@@ -78,7 +78,7 @@
            <number>1</number>
           </property>
           <property name="value">
-           <number>5</number>
+           <number>1</number>
           </property>
          </widget>
         </item>
@@ -99,10 +99,13 @@
            <number>5</number>
           </property>
           <property name="minimum">
-           <double>0.100000000000000</double>
+           <double>0.001000000000000</double>
           </property>
           <property name="singleStep">
            <double>0.100000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.010000000000000</double>
           </property>
          </widget>
         </item>
@@ -129,7 +132,7 @@
            <double>0.010000000000000</double>
           </property>
           <property name="value">
-           <double>0.001000000000000</double>
+           <double>0.000001000000000</double>
           </property>
          </widget>
         </item>
@@ -146,11 +149,14 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="modtimeSpin">
+          <property name="decimals">
+           <number>10</number>
+          </property>
           <property name="minimum">
-           <double>0.010000000000000</double>
+           <double>0.000000000000000</double>
           </property>
           <property name="value">
-           <double>5.000000000000000</double>
+           <double>0.001000000000000</double>
           </property>
          </widget>
         </item>
@@ -182,7 +188,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>767</width>
+     <width>835</width>
      <height>22</height>
     </rect>
    </property>
