@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <cmath>
 #include <KPEq/newtpoly.hpp>
@@ -8,8 +8,10 @@
 #include <fmt/core.h>
 #include <cmath>
 #include <numbers>
+#include <QVXYModelMapper>
+#include <memory>
 
-#define MOD_LW2_DEBUG
+//#define MOD_LW2_DEBUG
 #ifdef MOD_LW2_DEBUG
     #define PRINTTB(VAL) fmt::print("{} {}\t",#VAL,VAL)
     #define PRINTLN(VAL) fmt::print("{} {}\n",#VAL,VAL)
@@ -26,8 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-#define LIKE_FROM_DOC
-#ifdef LIKE_FROM_DOC
     double R = 0.35;
     double l_p = 12; //sm -> m
     double L_k = 187e-6; //from spin or TexBox
@@ -36,19 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     double U_co = 1400;
     double I_0 = 0;
     double T_w = 2000;
-#else
-    double R = 0.0035;
-    double l_p = 0.012; //sm -> m
-    double L_k = 0.000187; //from spin or TexBox
-    double C_k = 0.000268;
-    double R_k = 0.25; //from spin or TexBox
-    double U_co = 1400;
-    double I_0 = 0.0;
-    double T_w = 2000;
-#endif
 
-    /* need set row names */
-    /* for input values need map data table (string values with row names for use this further */
     KPEq::Q::Tcont init_data = {
         {R},
         {l_p},
@@ -61,7 +49,17 @@ MainWindow::MainWindow(QWidget *parent)
     };
 
     this->initdata_model = new KPEq::Q::ItemModel(init_data); //here need ref from model for data access
+    initdata_model->setHeaderData(0, Qt::Orientation::Horizontal, "InitVars");
+    initdata_model->setHeaderData(0, Qt::Orientation::Vertical,  "R");
+    initdata_model->setHeaderData(1, Qt::Orientation::Vertical,  "l_p");
+    initdata_model->setHeaderData(2, Qt::Orientation::Vertical,  "L_k");
+    initdata_model->setHeaderData(3, Qt::Orientation::Vertical,  "C_k");
+    initdata_model->setHeaderData(4, Qt::Orientation::Vertical,  "R_k");
+    initdata_model->setHeaderData(5, Qt::Orientation::Vertical,  "U_co");
+    initdata_model->setHeaderData(6, Qt::Orientation::Vertical,  "I_0");
+    initdata_model->setHeaderData(7, Qt::Orientation::Vertical,  "T_w");
     ui->tableV_InitVals->setModel(initdata_model);
+
 
     KPEq::Q::Tcont I_T0_m_data = {
         { 0.5, 	6730, 0.50 	},
@@ -76,6 +74,9 @@ MainWindow::MainWindow(QWidget *parent)
     };
 
     this->I_T0_m_data_model = new KPEq::Q::ItemModel(I_T0_m_data); //here need ref from model for data access
+    I_T0_m_data_model->setHeaderData(0, Qt::Orientation::Horizontal, "I");
+    I_T0_m_data_model->setHeaderData(1, Qt::Orientation::Horizontal, "T0");
+    I_T0_m_data_model->setHeaderData(2, Qt::Orientation::Horizontal, "m");
     ui->tableV_I_T0_m->setModel(I_T0_m_data_model);
 
     KPEq::Q::Tcont Tk_sigma = {
@@ -94,10 +95,27 @@ MainWindow::MainWindow(QWidget *parent)
     };
 
     this->Tk_sigma_model = new KPEq::Q::ItemModel(Tk_sigma); //here need ref from model for data access
+    Tk_sigma_model->setHeaderData(0, Qt::Orientation::Horizontal, "T");
+    Tk_sigma_model->setHeaderData(1, Qt::Orientation::Horizontal, "𝜎");
     ui->tableV_Sigma_T->setModel(Tk_sigma_model);
 
+    /* set geometry of items of all tables */
+    QVector<QTableView*> tables;
+    tables  << ui->tableV_InitVals
+            << ui->tableV_I_T0_m
+            << ui->tableV_OutData
+            << ui->tableV_Sigma_T;
+    for(auto tble : tables)
+    {
+    }
+
+    /* chart init*/
     this->chart = new KPEq::Chart;
+    chart->legend()->show();
     ui->graphicsView->setChart(this->chart);
+
+    results_model = new KPEq::Q::ItemModel(this);
+    ui->tableV_OutData->setModel(results_model); // тут по идее м.б. замедление т.к. данные не передаются... они копируются
 }
 
 MainWindow::~MainWindow()
@@ -130,7 +148,6 @@ void MainWindow::on_calculateBtn_clicked()
 
     KPEq::Interpoll::SrcNodesType tabledata_T0I;
     KPEq::Interpoll::SrcNodesType tabledata_mI;
-    auto rows =  this->I_T0_m_data_model->rowCount();
     for(auto i = 0; i < this->I_T0_m_data_model->rowCount(); i++){
         auto I  = (*I_T0_m_data_model)[i][0];
         auto T0 = (*I_T0_m_data_model)[i][1];
@@ -139,16 +156,16 @@ void MainWindow::on_calculateBtn_clicked()
         tabledata_mI.push_back	({I,m});
     }
     KPEq::Interpoll::SrcNodesType tabledata_SigmT;
-    rows = this->Tk_sigma_model->rowCount();
     for(auto i = 0; i < this->Tk_sigma_model->rowCount(); i++){
         auto T  	= (*Tk_sigma_model)[i][0];
         auto sigma  = (*Tk_sigma_model)[i][1];
         tabledata_SigmT.push_back({T,sigma});
     }
 
+    /* ************************************************************* */
     /* init interpollation objects */
 
-    static auto T = [polypow, T_w](double T0, double m, double z)->double{
+    static auto T = [T_w](double T0, double m, double z)->double{
         auto T = (T0 - (T_w - T0) * std::pow(z, m));
         return T;
     } ;
@@ -161,8 +178,9 @@ void MainWindow::on_calculateBtn_clicked()
     KPEq::Interpoll::NewtPoly newt_mbyI(tabledata_mI, newtsmode);
     if(newt_mbyI.isWrong())
         throw std::invalid_argument("wrong table data");
-    static auto interp_T0_m_byI = [polypow, &newt_T0byI, &newt_mbyI,T_w](double I) -> std::pair<double,double>{
 
+    static auto interp_T0_m_byI = [&polypow, &newt_T0byI, &newt_mbyI,T_w](double I) -> std::pair<double,double>
+    {
         if(newt_T0byI.setConfig(abs(I), polypow) < 0)
             throw std::invalid_argument("newtbyZ wrong cnfg");
         auto T0 = newt_T0byI.calc();
@@ -180,22 +198,26 @@ void MainWindow::on_calculateBtn_clicked()
         return {T0.value(),m.value()};
     };
 
+
     KPEq::Interpoll::NewtPoly newt_SigmByT(tabledata_SigmT, newtsmode);
     if(newt_SigmByT.isWrong())
         throw std::invalid_argument("wrong table data");
-    static auto sigm = [polypow, & newt_SigmByT](double T)->double{
-        auto configErr = newt_SigmByT.setConfig(T, polypow);
-        if(configErr < 0)
-            throw std::invalid_argument("newtByT wrong cnfg");
-        auto sigmaOpt = newt_SigmByT.calc();
-        if(!sigmaOpt.has_value())
+
+    static auto sigm = [&polypow, & newt_SigmByT](double T)->double
+    {
+        if(newt_SigmByT.setConfig(T, polypow) < 0)
+            throw std::invalid_argument("newt_SigmByT wrong cnfg");
+
+        auto sigma = newt_SigmByT.calc();
+        if(!sigma.has_value())
             throw std::runtime_error("sigma hasn't value");
-        auto sigma = sigmaOpt.value();
-        PRINTTB(sigma);
-        return sigma;
+        PRINTTB(sigma.value());
+
+        return sigma.value();
     };
 
-    static auto R_p = [l_p, R, integr_step](double I) -> double
+    std::tuple<double,double,double> Rp_T0_m_tuple;
+    static auto R_p = [l_p, R, integr_step, &Rp_T0_m_tuple](double I) -> double
     {
         auto pair_T0_m = interp_T0_m_byI(I);
         auto T0 = pair_T0_m.first;
@@ -205,11 +227,14 @@ void MainWindow::on_calculateBtn_clicked()
             PRINTTB(iterIntegr);
             return iterIntegr;
         };
+
         KPEq::Integral integr(integrfunc, 0, 1);
         auto integr_sigmaByTByT0nZ_mul_z = integr.calcBySympson(integr_step);
         PRINTLN(integr_sigmaByTByT0nZ_mul_z);
-        auto R_p = ( l_p / (2 * M_PI * R * R * (integr_sigmaByTByT0nZ_mul_z)));
-        PRINTTB(R_p);
+
+        auto R_p = ( l_p / (2 * M_PI * R * R * (integr_sigmaByTByT0nZ_mul_z))); PRINTTB(R_p);
+
+        Rp_T0_m_tuple = std::tuple(R_p,T0,m);
         return R_p;
     };
 
@@ -222,37 +247,73 @@ void MainWindow::on_calculateBtn_clicked()
         auto result = ( -I / C_k );
         return result;
     };
+    /* ************************************************************* */
 
-    /* calculate ODE */
-    double modtime = ui->modtimeSpin->value();
+    /* init ODE */
+    double modTime = ui->modtimeSpin->value();
     double modStep = ui->modstepSpin->value();
     double time = 0;
 
-    KPEq::Q::Tcont results;
-    QLineSeries * results_series_I = new QLineSeries();
-    QLineSeries * results_series_U = new QLineSeries();
-    results.push_back({time,I,U});
-    results_series_I->append({time,I});
-    results_series_U->append({time,U});
+    double RpScale = 1000.0, T0Scale = 0.1, mScale = 10.0;
+    QLineSeries * results_series_I = new QLineSeries(); 	results_series_I->setName("I(t)");
+    QLineSeries * results_series_U = new QLineSeries(); 	results_series_U->setName("U(t)");
+    QLineSeries * results_series_Rp = new QLineSeries(); 	results_series_Rp->setName(QString("Rp(t)*%1").arg(RpScale));
+    QLineSeries * results_series_IRp = new QLineSeries(); 	results_series_IRp->setName(QString("I(t)*Rp(t)"));
+    QLineSeries * results_series_T0 = new QLineSeries(); 	results_series_T0->setName(QString("T0(t)*%1").arg(T0Scale));
+//    QLineSeries * results_series_m = new QLineSeries(); 	results_series_m->setName(QString("m(t)*%1").arg(mScale));
+    QVector<QLineSeries*> series_vect;
+    series_vect << results_series_I << results_series_U << results_series_Rp << results_series_IRp << results_series_T0 ;
 
+    /* calc ODE */
     KPEq::ODE::ODESysEqua odeSysEqua(di_dt, du_dt, modStep);
-    while(time < modtime){
-        auto I_U_pair = odeSysEqua.calcNextByRunge4(time, I, U); //here need switch to choise Runge, need realize Runge1
-        I = I_U_pair.first;
-        PRINTLN(I);
-        U = I_U_pair.second;
-        PRINTLN(U);
-        PRINTNEWLN();
+
+    KPEq::Q::Tcont results;
+    results.push_back({time,I,U});
+
+    while(time < modTime)
+    {
+        auto I_U_pair = odeSysEqua.calcNextByRunge1(time, I, U); //here need switch to choise Runge, need realize Runge1
+        I = I_U_pair.first; 	PRINTLN(I);
+        U = I_U_pair.second; 	PRINTLN(U); PRINTNEWLN();
         if(I!=I || U != U) 
             break; // is NaN
+
         /* set data to table */
-        results.push_back({time,I,U});
-        results_series_I->append({time,I});
-        results_series_U->append({time,U});
+        double Rp,T0,m;
+        std::tie(Rp,T0,m) = Rp_T0_m_tuple;
+        results.push_back({time,I,U,Rp*RpScale,I*Rp,T0*T0Scale});
     }
-    this->chart->updateSeries(results_series_I);
-    this->chart->addSeries(results_series_U);
-    this->chart->createDefaultAxes();
-    results_model = new KPEq::Q::ItemModel(results);
-    ui->tableV_OutData->setModel(results_model);
+
+    (*results_model) << std::move(results);
+    results_model->setHeaderData(0, Qt::Orientation::Horizontal,  "t");
+    results_model->setHeaderData(1, Qt::Orientation::Horizontal,  "I");
+    results_model->setHeaderData(2, Qt::Orientation::Horizontal,  "U");
+    results_model->setHeaderData(3, Qt::Orientation::Horizontal,  QString("Rp*%1").arg(RpScale));
+    results_model->setHeaderData(4, Qt::Orientation::Horizontal,  "I*Rp");
+    results_model->setHeaderData(5, Qt::Orientation::Horizontal,  QString("T0*%1"));
+
+
+    /* add results to chart */
+    bool isFirst = true;
+    int counter = 1;
+        fmt::print("{}\n", counter);
+    chart->removeAllSeries();
+    for(auto s : series_vect)
+    {
+        s->clear();
+        auto map = new QVXYModelMapper(this);
+        map->setXColumn(0);
+        fmt::print("{}\n", counter);
+        map->setYColumn(counter++);
+        map->setModel(results_model);
+        map->setSeries(s);
+        if(isFirst)
+        {
+            this->chart->updateSeries(s);
+            isFirst = false;
+        }
+        else
+            this->chart->addSeries(s);
+        this->chart->createDefaultAxes();
+    }
 }
