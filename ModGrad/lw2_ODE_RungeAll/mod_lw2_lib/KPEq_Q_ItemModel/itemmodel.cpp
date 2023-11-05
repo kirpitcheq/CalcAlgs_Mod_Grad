@@ -17,9 +17,13 @@ int ItemModel::rowCount(const QModelIndex &parent) const { return items.size(); 
 
 int ItemModel::columnCount(const QModelIndex &parent) const {
     int maxsize = 0;
-    for(auto item : items){
+    int counter = 0;
+    constexpr int maxcount = 100;
+    for(const auto &item : items){
         auto item_size = item.size();
         if(item_size > maxsize) maxsize = item_size;
+        if(counter++ > maxcount)
+            break;
     }
     return maxsize;
 }
@@ -136,6 +140,17 @@ QModelIndex ItemModel::parent(const QModelIndex &child) const
     Q_UNUSED(child);
     return QModelIndex();
 }
+
+void ItemModel::operator<<(Tcont &&items)
+{
+    ;
+    this->items = std::move(items);
+    emit dataChanged(index(0,0),index(rowCount(),columnCount()));
+}
+
+const Tcontrow ItemModel::operator[](int rowitems) const  { return items[rowitems]; }
+
+Tcontrow &ItemModel::operator[](int rowitems){ return items[rowitems]; }
 
 } // namespace Q
 } // namespace KPEq

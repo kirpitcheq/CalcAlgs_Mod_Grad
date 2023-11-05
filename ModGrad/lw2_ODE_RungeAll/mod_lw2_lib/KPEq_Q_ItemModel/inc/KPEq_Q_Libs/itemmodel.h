@@ -36,13 +36,9 @@ public:
 
     ~ItemModel() override = default;
 
-    void operator<<(Tcont &&items)
-    {
-        ;
-        this->items = std::move(items);
-        emit dataChanged(index(0,0),index(rowCount(),columnCount()));
-    }
-    Tcontrow& operator[](int rowitems){ return items[rowitems]; }
+    void operator<<(Tcont &&items);
+    Tcontrow& operator[](int rowitems);
+    const Tcontrow operator[](int rowitems) const;
 
 private:
     Tcont items;
