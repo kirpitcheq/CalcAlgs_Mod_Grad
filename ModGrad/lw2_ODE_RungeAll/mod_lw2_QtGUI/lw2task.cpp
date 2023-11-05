@@ -38,7 +38,12 @@ LW2Task::LW2Task(int polypow, double integr_step, KPEq::Interpoll::NewtCnfgEnumC
     T_w = modelinits[7][0];
 }
 
-void LW2Task::calcODE(double modTime, double modStep, KPEq::Q::ItemModel &results_model, KPEq::Chart &chart){
+void LW2Task::calcODE(double modTime,
+                      double modStep,
+                      QString ser_id,
+                      KPEq::Q::ItemModel &results_model,
+                      KPEq::Chart &chart,
+                      std::function<ODEResV(ODEMeth::*, ODETVal&,const ODETVal,const ODETVal)){
     auto di_dt = [this](double t, double I, double U) -> double
     {
         auto R_p_ByI = R_p(I);
@@ -55,11 +60,11 @@ void LW2Task::calcODE(double modTime, double modStep, KPEq::Q::ItemModel &result
     /* init ODE */
 
     double RpScale = 1000.0, T0Scale = 0.1, mScale = 10.0;
-    QLineSeries * results_series_I = new QLineSeries(); 	results_series_I->setName("I(t)");
-    QLineSeries * results_series_U = new QLineSeries(); 	results_series_U->setName("U(t)");
-    QLineSeries * results_series_Rp = new QLineSeries(); 	results_series_Rp->setName(QString("Rp(t)*%1").arg(RpScale));
-    QLineSeries * results_series_IRp = new QLineSeries(); 	results_series_IRp->setName(QString("I(t)*Rp(t)"));
-    QLineSeries * results_series_T0 = new QLineSeries(); 	results_series_T0->setName(QString("T0(t)*%1").arg(T0Scale));
+    QLineSeries * results_series_I = new QLineSeries(); 	results_series_I->setName(QString("%1:I(t)").arg(ser_id));
+    QLineSeries * results_series_U = new QLineSeries(); 	results_series_U->setName(QString("%1:U(t)").arg(ser_id));
+    QLineSeries * results_series_Rp = new QLineSeries(); 	results_series_Rp->setName(QString("%1:Rp(t)*%2").arg(ser_id).arg(RpScale));
+    QLineSeries * results_series_IRp = new QLineSeries(); 	results_series_IRp->setName(QString("%1:I(t)*Rp(t)").arg(ser_id));
+    QLineSeries * results_series_T0 = new QLineSeries(); 	results_series_T0->setName(QString("%1:T0(t)*%2").arg(ser_id).arg(T0Scale));
     //    QLineSeries * results_series_m = new QLineSeries(); 	results_series_m->setName(QString("m(t)*%1").arg(mScale));
     QVector<QLineSeries*> series_vect;
     series_vect << results_series_I << results_series_U << results_series_Rp << results_series_IRp << results_series_T0 ;

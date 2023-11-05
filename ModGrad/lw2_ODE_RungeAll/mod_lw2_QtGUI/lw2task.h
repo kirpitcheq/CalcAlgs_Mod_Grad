@@ -21,6 +21,14 @@
 class LW2Task
 {
 public:
+
+    using ODETVal = KPEq::ODE::ODESysEqua::TVal;
+    using ODEResV = std::pair<ODETVal, ODETVal>;
+    using ODEMeth = KPEq::ODE::ODESysEqua;
+//	using ODESign = ODEResV ODEMeth::*(ODETVal &xlast, const ODETVal ylast, const ODETVal zlast);
+    using ODESign =  ODEResV(ODEMeth::*, ODETVal&,const ODETVal,const ODETVal);
+    std::function<ODESign> odemeth;
+
     LW2Task(int polypow,
         double integr_step,
         KPEq::Interpoll::NewtCnfgEnumC newtsmode,
