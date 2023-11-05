@@ -30,7 +30,7 @@
          <widget class="QTableView" name="tableV_InitVals">
           <property name="maximumSize">
            <size>
-            <width>140</width>
+            <width>120</width>
             <height>16777215</height>
            </size>
           </property>
@@ -51,7 +51,7 @@
          <widget class="QTableView" name="tableV_I_T0_m">
           <property name="maximumSize">
            <size>
-            <width>200</width>
+            <width>170</width>
             <height>16777215</height>
            </size>
           </property>
@@ -72,7 +72,7 @@
          <widget class="QTableView" name="tableV_Sigma_T">
           <property name="maximumSize">
            <size>
-            <width>200</width>
+            <width>125</width>
             <height>16777215</height>
            </size>
           </property>
@@ -82,8 +82,14 @@
       </item>
       <item>
        <widget class="QTabWidget" name="tabWidget">
+        <property name="minimumSize">
+         <size>
+          <width>400</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -112,6 +118,26 @@
          <layout class="QHBoxLayout" name="horizontalLayout_10">
           <item>
            <widget class="QTableView" name="tableV_OutData_RK4"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_4">
+         <attribute name="title">
+          <string>Rk+Rp=0</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_11">
+          <item>
+           <widget class="QTableView" name="tableV_OutData_RkRpNull"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_5">
+         <attribute name="title">
+          <string>Rk = 200</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <item>
+           <widget class="QTableView" name="tableV_OutData_Rk200"/>
           </item>
          </layout>
         </widget>
@@ -160,7 +186,7 @@
            <double>0.001000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.100000000000000</double>
+           <double>0.010000000000000</double>
           </property>
           <property name="value">
            <double>0.010000000000000</double>
@@ -187,7 +213,7 @@
            <double>0.000000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.010000000000000</double>
+           <double>0.000001000000000</double>
           </property>
           <property name="value">
            <double>0.000001000000000</double>
@@ -212,6 +238,9 @@
           </property>
           <property name="minimum">
            <double>0.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.000100000000000</double>
           </property>
           <property name="value">
            <double>0.001000000000000</double>

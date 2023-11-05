@@ -8,7 +8,7 @@
 #include <KPEq/rungeode.hpp>
 #include <QVXYModelMapper>
 
-#ifdef MOD_LW2_DEBUG
+#ifdef KPEqLib_DEBUG
     #define PRINTTB(VAL) fmt::print("{} {}\t",#VAL,VAL)
     #define PRINTLN(VAL) fmt::print("{} {}\n",#VAL,VAL)
     #define PRINTNEWLN() fmt::print("\n")
@@ -24,10 +24,7 @@ public:
 
     using ODETVal = KPEq::ODE::ODESysEqua::TVal;
     using ODEResV = std::pair<ODETVal, ODETVal>;
-    using ODEMeth = KPEq::ODE::ODESysEqua;
-//	using ODESign = ODEResV ODEMeth::*(ODETVal &xlast, const ODETVal ylast, const ODETVal zlast);
-    using ODESign =  ODEResV(ODEMeth::*, ODETVal&,const ODETVal,const ODETVal);
-    std::function<ODESign> odemeth;
+    using ODECLass = KPEq::ODE::ODESysEqua;
 
     LW2Task(int polypow,
         double integr_step,
@@ -36,7 +33,15 @@ public:
         const KPEq::Q::ItemModel &modelIT0,
         const KPEq::Q::ItemModel &modelIm,
         const KPEq::Q::ItemModel &modelTSigm);
-    void calcODE(double modTime, double modStep, KPEq::Q::ItemModel & results_model, KPEq::Chart & chart);
+//    void calcODE(double modTime, double modStep, KPEq::Q::ItemModel & results_model, KPEq::Chart & chart);
+
+    void calcODE(double ,
+                 double ,
+                 QString,
+                 KPEq::Q::ItemModel &,
+                 KPEq::Chart &,
+                 std::function<ODEResV(KPEq::ODE::ODESysEqua&, ODETVal &, const ODETVal, const ODETVal)> ,
+                 bool = false);
 private:
     bool isCachable = true;
     /* init values */
@@ -94,7 +99,7 @@ private:
     double T0 ;
     double m ;
     std::tuple<double,double,double> Rp_T0_m_tuple;
-    auto R_p (double I)
+    double R_p (double I)
     {
         auto pair_T0_m = interp_T0_m_byI(I);
         T0 = pair_T0_m.first;
