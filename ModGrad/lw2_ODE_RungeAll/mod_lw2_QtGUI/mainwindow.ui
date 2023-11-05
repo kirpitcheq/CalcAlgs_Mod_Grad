@@ -7,27 +7,34 @@
     <x>0</x>
     <y>0</y>
     <width>835</width>
-    <height>858</height>
+    <height>978</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_5">
+   <layout class="QVBoxLayout" name="verticalLayout_5" stretch="10,0,13">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,10,7">
+     <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="4,6,4,15">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Init values (circuit params)</string>
+           <string>Init values </string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QTableView" name="tableV_InitVals"/>
+         <widget class="QTableView" name="tableV_InitVals">
+          <property name="maximumSize">
+           <size>
+            <width>140</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -36,12 +43,19 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>I-T0-m (interpollation)</string>
+           <string>I-T0-m (interpoll)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QTableView" name="tableV_I_T0_m"/>
+         <widget class="QTableView" name="tableV_I_T0_m">
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -50,14 +64,58 @@
         <item>
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>sigma-T (interpollation)</string>
+           <string>sigma-T (interpoll)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QTableView" name="tableV_Sigma_T"/>
+         <widget class="QTableView" name="tableV_Sigma_T">
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="currentIndex">
+         <number>1</number>
+        </property>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>RK1 (Eiler's)</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QTableView" name="tableV_OutData"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_2">
+         <attribute name="title">
+          <string>RK2</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <item>
+           <widget class="QTableView" name="tableV_OutData_RK2"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_3">
+         <attribute name="title">
+          <string>RK4</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_10">
+          <item>
+           <widget class="QTableView" name="tableV_OutData_RK4"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
       </item>
      </layout>
     </item>
@@ -173,9 +231,6 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QTableView" name="tableV_OutData"/>
-      </item>
       <item>
        <widget class="QChartView" name="graphicsView"/>
       </item>

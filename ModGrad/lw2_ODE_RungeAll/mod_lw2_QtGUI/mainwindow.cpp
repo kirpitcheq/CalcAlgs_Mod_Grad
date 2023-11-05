@@ -95,19 +95,36 @@ MainWindow::MainWindow(QWidget *parent)
     QVector<QTableView*> tables;
     tables  << ui->tableV_InitVals
             << ui->tableV_I_T0_m
-            << ui->tableV_OutData
             << ui->tableV_Sigma_T;
     for(auto tble : tables)
     {
+        auto cols = tble->model()->columnCount();
+        for(auto col = 0; col < cols; col++)
+        {
+            tble->setColumnWidth(col, 2);
+        }
+        auto rows = tble->model()->rowCount();
+        for(auto row = 0; row < rows; row++)
+        {
+            tble->setRowHeight(row,1);
+        }
     }
+    ui->tableV_InitVals->setColumnWidth(0,70);
+
+//            << ui->tableV_OutData
 
     /* chart init*/
     this->chart = new KPEq::Chart;
     chart->legend()->show();
     ui->graphicsView->setChart(this->chart);
 
+    /* set results model tables for tableViews */
     results_model = new KPEq::Q::ItemModel(this);
-    ui->tableV_OutData->setModel(results_model); // тут по идее м.б. замедление т.к. данные не передаются... они копируются
+    ui->tableV_OutData->setModel(results_model);
+    resultsRK2_model= new KPEq::Q::ItemModel(this);
+    ui->tableV_OutData_RK2->setModel(resultsRK2_model);
+    resultsRK4_model= new KPEq::Q::ItemModel(this);
+    ui->tableV_OutData_RK4->setModel(resultsRK4_model);
 
 
 }
@@ -125,9 +142,14 @@ void MainWindow::on_calculateBtn_clicked()
     KPEq::Interpoll::NewtCnfgEnumC newtsmode = KPEq::Interpoll::NewtCnfgEnumC::NORMAL;
 
     LW2Task lw2task1(polypow, integr_step, newtsmode, *initdata_model, *I_T0_m_data_model, *I_T0_m_data_model, *Tk_sigma_model);
+    LW2Task lw2task2(polypow, integr_step, newtsmode, *initdata_model, *I_T0_m_data_model, *I_T0_m_data_model, *Tk_sigma_model);
+    LW2Task lw2task4(polypow, integr_step, newtsmode, *initdata_model, *I_T0_m_data_model, *I_T0_m_data_model, *Tk_sigma_model);
 
     double modTime = ui->modtimeSpin->value();
     double modStep = ui->modstepSpin->value();
+    chart->removeAllSeries();
     lw2task1.calcODE(modTime,modStep, *results_model, *chart);
+    lw2task2.calcODE(modTime,modStep, *resultsRK2_model, *chart);
+    lw2task4.calcODE(modTime,modStep, *resultsRK4_model, *chart);
 }
 

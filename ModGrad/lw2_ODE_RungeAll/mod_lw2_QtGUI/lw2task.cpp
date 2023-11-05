@@ -99,7 +99,7 @@ void LW2Task::calcODE(double modTime, double modStep, KPEq::Q::ItemModel &result
     /* this chart must be common, need semaph or something */
     /* add results to chart */
     int counter = 1;
-    chart.removeAllSeries();
+//    chart.removeAllSeries();
     chart.createDefaultAxes();
     for(auto s : series_vect)
     {
