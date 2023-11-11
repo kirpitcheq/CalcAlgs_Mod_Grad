@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
-#include "../lw1_lib/modules/newtpolyroots.hpp"
+#include <KPEq/newtpolyroots.hpp>
 
+using namespace KPEq::Interpoll;
 TEST(NPRootsCtorTests, MustBeRoots){
-    NewtPoly::SrcNodesType srcnodes = {
-        NewtPoly::XYNodes(0,-3),
+    SrcNodesType srcnodes = {
+        XYNodes(0,-3),
         // NewtPoly::XYNodes(3,0), //must be this root
-        NewtPoly::XYNodes(3,6),
+        XYNodes(3,6),
     };
 
     NewtPolyRoots nproots(srcnodes, 1);

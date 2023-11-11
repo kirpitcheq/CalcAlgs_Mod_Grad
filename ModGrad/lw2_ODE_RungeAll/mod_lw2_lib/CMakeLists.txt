@@ -32,9 +32,11 @@ target_include_directories(KPEq_Integral PUBLIC inc)
 target_link_libraries(KPEq_Integral PUBLIC fmt::fmt)
 set_target_properties(KPEq_Integral PROPERTIES LINKER_LANGUAGE CXX)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+# tests for it
+add_subdirectory(tests_integral_kpeq)
 
 project(KPEq_RungeODE VERSION 0.1.0 LANGUAGES C CXX)
-add_library(${PROJECT_NAME} inc/KPEq/rungeode.hpp)
+add_library(${PROJECT_NAME} inc/KPEq/rungeode.hpp rungeode.cpp)
 target_include_directories(KPEq_RungeODE PUBLIC inc)
 set_target_properties(KPEq_RungeODE PROPERTIES LINKER_LANGUAGE CXX)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)

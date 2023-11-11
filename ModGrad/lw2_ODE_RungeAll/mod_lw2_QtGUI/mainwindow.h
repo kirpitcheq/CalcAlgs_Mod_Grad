@@ -24,7 +24,16 @@ private slots:
     void on_calculateBtn_clicked();
 
 private:
-    KPEq::Q::ItemModel * initdata_model, * I_T0_m_data_model, * Tk_sigma_model, * results_model;
+    KPEq::Q::ItemModel
+        * initdata_model,
+        * I_T0_m_data_model,
+        * Tk_sigma_model,
+        * results_model,
+        *resultsRK2_model,
+        *resultsRK4_model,
+        *resultsRk200_model,
+        *resultsRkRpNull_model
+        ;
     KPEq::Chart *chart;
     Ui::MainWindow *ui;
 };

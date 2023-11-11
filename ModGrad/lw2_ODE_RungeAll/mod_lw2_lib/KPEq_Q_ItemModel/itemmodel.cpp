@@ -1,4 +1,4 @@
-#include "itemmodel.h"
+#include <KPEq_Q_Libs/itemmodel.h>
 
 namespace KPEq {
 namespace Q {
@@ -17,9 +17,13 @@ int ItemModel::rowCount(const QModelIndex &parent) const { return items.size(); 
 
 int ItemModel::columnCount(const QModelIndex &parent) const {
     int maxsize = 0;
-    for(auto item : items){
+    int counter = 0;
+    constexpr int maxcount = 100;
+    for(const auto &item : items){
         auto item_size = item.size();
         if(item_size > maxsize) maxsize = item_size;
+        if(counter++ > maxcount)
+            break;
     }
     return maxsize;
 }
@@ -30,15 +34,37 @@ QVariant ItemModel::data(const QModelIndex &index, int role) const {
     return QVariant();
 }
 
+#define HEADERS_REIMPLEMENT
+#ifdef HEADERS_REIMPLEMENT
 QVariant ItemModel::headerData(int section, Qt::Orientation orientation, int role) const {
-    if(role == Qt::DisplayRole && role == Qt::EditRole){
+    if(role == Qt::DisplayRole || role == Qt::EditRole){
         if(orientation == Qt::Horizontal)
-            return QString("Row $1").arg(section);
+            return m_hor_headers.contains(section) ? m_hor_headers[section] : QString::number(section);
         else if (orientation == Qt::Vertical)
-            return QString("Column $1").arg(section);
+            return m_ver_headers.contains(section) ? m_ver_headers[section] : QString::number(section);
     }
     return QVariant();
 }
+
+bool KPEq::Q::ItemModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+{
+    if(role == Qt::EditRole && value.isValid())
+    {
+        if(orientation == Qt::Orientation::Horizontal)
+        {
+            m_hor_headers[section] = value.toString();
+        }
+        else if(orientation == Qt::Orientation::Vertical)
+        {
+            m_ver_headers[section] = value.toString();
+        }
+    }
+    else
+        return false;
+    emit headerDataChanged(orientation, section, section);
+    return true;
+}
+#endif
 
 Qt::ItemFlags ItemModel::flags(const QModelIndex &index) const {
     if(!index.isValid()) return Qt::ItemIsEnabled;
@@ -114,6 +140,17 @@ QModelIndex ItemModel::parent(const QModelIndex &child) const
     Q_UNUSED(child);
     return QModelIndex();
 }
+
+void ItemModel::operator<<(Tcont &&items)
+{
+    ;
+    this->items = std::move(items);
+    emit dataChanged(index(0,0),index(rowCount(),columnCount()));
+}
+
+const Tcontrow ItemModel::operator[](int rowitems) const  { return items[rowitems]; }
+
+Tcontrow &ItemModel::operator[](int rowitems){ return items[rowitems]; }
 
 } // namespace Q
 } // namespace KPEq

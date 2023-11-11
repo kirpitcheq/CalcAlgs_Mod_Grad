@@ -4,6 +4,7 @@
 #include <QAbstractItemModel>
 #include <QObject>
 #include <QWidget>
+#include <QMap>
 
 namespace KPEq {
 namespace Q {
@@ -11,16 +12,17 @@ namespace Q {
 using Tval = double;
 using Tcontrow = std::vector<Tval>;
 using Tcont = std::vector<Tcontrow>;
-class ItemModel : public QAbstractItemModel
+class ItemModel : public QAbstractTableModel//QAbstractItemModel
 {
     Q_OBJECT
 public:
-    ItemModel(const Tcont& items, QObject *parent = nullptr) : QAbstractItemModel{parent}, items(items){}
-//    explicit ItemModel(QObject *parent = nullptr) : QAbstractItemModel{parent}{}
+    ItemModel(const Tcont& items, QObject *parent = nullptr) : items(items), QAbstractTableModel{parent}{}//QAbstractItemModel{parent}{}
+    explicit ItemModel(QObject *parent = nullptr) : QAbstractTableModel{parent}{}
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     bool insertRows(int position, int rows, const QModelIndex &index = QModelIndex()) override;
@@ -34,9 +36,14 @@ public:
 
     ~ItemModel() override = default;
 
-    Tcontrow& operator[](int rowitems){ return items[rowitems]; }
+    void operator<<(Tcont &&items);
+    Tcontrow& operator[](int rowitems);
+    const Tcontrow operator[](int rowitems) const;
+
 private:
     Tcont items;
+    QMap<int,QString> m_hor_headers;
+    QMap<int,QString> m_ver_headers;
 };
 
 } // namespace Q

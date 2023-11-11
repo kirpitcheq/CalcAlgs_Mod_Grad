@@ -9,6 +9,9 @@ KPEq::Integral::Integral(IntegrandFunc &integrand_func, double from, double to) 
 
 double KPEq::Integral::calcBySympson(double step) // step or numb of intervals maybe?
 {
+    auto range = to - from ;
+    auto amount= (int)(range / step);
+
     if(step <= 0) {
         throw std::invalid_argument((std::string)fmt::format("Wrong argument: step {} must be more than 0", step)); //or must be more than 2?
     }
@@ -17,7 +20,8 @@ double KPEq::Integral::calcBySympson(double step) // step or numb of intervals m
     bool isEven = true;
     // = 1 / 3 (f_2n+0 + 2 + 4 * f_2n+1 + f_2n+2 ) ???
     double x = from + step;
-    while(x < to){
+    for(auto i = 1; i < amount; i++)
+    {
         if(isEven)
             result += (integrand_func(x) * 4);
         else

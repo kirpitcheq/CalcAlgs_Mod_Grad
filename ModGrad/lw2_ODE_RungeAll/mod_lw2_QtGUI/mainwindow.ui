@@ -6,28 +6,35 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>767</width>
-    <height>655</height>
+    <width>835</width>
+    <height>978</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_5">
+   <layout class="QVBoxLayout" name="verticalLayout_5" stretch="10,0,13">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,10,7">
+     <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="4,6,4,15">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Init values (circuit params)</string>
+           <string>Init values </string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QTableView" name="tableV_InitVals"/>
+         <widget class="QTableView" name="tableV_InitVals">
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -36,12 +43,19 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>I-T0-m (interpollation)</string>
+           <string>I-T0-m (interpoll)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QTableView" name="tableV_I_T0_m"/>
+         <widget class="QTableView" name="tableV_I_T0_m">
+          <property name="maximumSize">
+           <size>
+            <width>170</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -50,14 +64,84 @@
         <item>
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>sigma-T (interpollation)</string>
+           <string>sigma-T (interpoll)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QTableView" name="tableV_Sigma_T"/>
+         <widget class="QTableView" name="tableV_Sigma_T">
+          <property name="maximumSize">
+           <size>
+            <width>125</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="minimumSize">
+         <size>
+          <width>400</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>RK1 (Eiler's)</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QTableView" name="tableV_OutData"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_2">
+         <attribute name="title">
+          <string>RK2</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <item>
+           <widget class="QTableView" name="tableV_OutData_RK2"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_3">
+         <attribute name="title">
+          <string>RK4</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_10">
+          <item>
+           <widget class="QTableView" name="tableV_OutData_RK4"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_4">
+         <attribute name="title">
+          <string>Rk+Rp=0</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_11">
+          <item>
+           <widget class="QTableView" name="tableV_OutData_RkRpNull"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_5">
+         <attribute name="title">
+          <string>Rk = 200</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <item>
+           <widget class="QTableView" name="tableV_OutData_Rk200"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
       </item>
      </layout>
     </item>
@@ -78,7 +162,7 @@
            <number>1</number>
           </property>
           <property name="value">
-           <number>5</number>
+           <number>1</number>
           </property>
          </widget>
         </item>
@@ -99,10 +183,13 @@
            <number>5</number>
           </property>
           <property name="minimum">
-           <double>0.100000000000000</double>
+           <double>0.001000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.100000000000000</double>
+           <double>0.010000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.010000000000000</double>
           </property>
          </widget>
         </item>
@@ -126,10 +213,10 @@
            <double>0.000000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.010000000000000</double>
+           <double>0.000001000000000</double>
           </property>
           <property name="value">
-           <double>0.001000000000000</double>
+           <double>0.000001000000000</double>
           </property>
          </widget>
         </item>
@@ -146,11 +233,17 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="modtimeSpin">
+          <property name="decimals">
+           <number>10</number>
+          </property>
           <property name="minimum">
-           <double>0.010000000000000</double>
+           <double>0.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.000100000000000</double>
           </property>
           <property name="value">
-           <double>5.000000000000000</double>
+           <double>0.001000000000000</double>
           </property>
          </widget>
         </item>
@@ -168,9 +261,6 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QTableView" name="tableV_OutData"/>
-      </item>
-      <item>
        <widget class="QChartView" name="graphicsView"/>
       </item>
      </layout>
@@ -182,7 +272,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>767</width>
+     <width>835</width>
      <height>22</height>
     </rect>
    </property>
